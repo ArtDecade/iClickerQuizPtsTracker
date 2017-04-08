@@ -61,7 +61,6 @@ namespace iClickerQuizPtsTracker
         Wksheet = 2
     }
 
-
     /// <summary>
     /// Provides a mechanism for pairing the name of each Excel <see cref="Excel.ListObject"/> 
     /// (i.e., Table) with its parent <see cref="Excel.Worksheet"/>. </summary>
@@ -119,7 +118,7 @@ namespace iClickerQuizPtsTracker
         private string[] _wshNmdRngs =
             { "rowSessionNmbr", "rowCourseWk", "rowSession", "rowTtlPts" };
         private QuizUserControl _ctrl = new QuizUserControl();
-        private List<DateTime> _qDts = new List<DateTime>();
+        private List<DateTime> _qzDts = new List<DateTime>();
         private List<string> _sessionNos = new List<string>();
         private Excel.ListObject _tblQuizGrades = null;
         private List<WshListobjPair> _listObjsByWsh = new List<WshListobjPair>();
@@ -138,7 +137,7 @@ namespace iClickerQuizPtsTracker
         public List<DateTime> QuizDates
         {
             get
-            { return _qDts; }
+            { return _qzDts; }
         }
 
         /// <summary>
@@ -146,7 +145,7 @@ namespace iClickerQuizPtsTracker
         /// which handles all interaction with the <see cref="Excel.ListObject"/> containing 
         /// all iClicker quiz grades.
         /// </summary>
-        public QuizDataLOWrapper QuizDataXLTblMgr
+        public QuizDataLOWrapper QuizDataListObjMgr
         {
             get
             { return _qdLOMgr; }
@@ -188,7 +187,6 @@ namespace iClickerQuizPtsTracker
                 return; // ...break out of app
             }
 
-
             try
             {
                 _twbkWrapper.VerifyWbkScopedNames(_wbkNmdRngs);
@@ -224,6 +222,7 @@ namespace iClickerQuizPtsTracker
                 return; // ...terminate program execution
             }
             #endregion
+
             _twbkWrapper.SetVirginWbkProperty();
             if (_twbkWrapper.IsVirginWbk)
             {
@@ -235,6 +234,7 @@ namespace iClickerQuizPtsTracker
             // TODO:  Set latest quiz date field in control panel...
             {
 
+
             }
         }
 
@@ -242,6 +242,7 @@ namespace iClickerQuizPtsTracker
         {
             // Comment...
         }
+#endregion
 
         private void PopulateQuizDates()
         {

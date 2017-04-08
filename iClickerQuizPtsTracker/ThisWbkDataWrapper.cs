@@ -66,7 +66,7 @@ namespace iClickerQuizPtsTracker
         /// </summary>
         public ThisWbkDataWrapper()
         {
-            _loQzGrades = Globals.Sheet1.ListObjects["tblClkrQuizGrades"];
+            _loQzGrades = Globals.WshQuizPts.ListObjects["tblClkrQuizGrades"];
         }
         #endregion
 
@@ -106,9 +106,9 @@ namespace iClickerQuizPtsTracker
         /// <returns>All the quiz sessions already downloaded into this workbook.</returns>
         public BindingList<Session> RetrieveSessions()
         {
-            int rowSessNo = Globals.Sheet1.Range["rowSessionNmbr"].Row;
-            int rowDt = Globals.Sheet1.Range["xx"].Row;
-            int rowMsxPts = Globals.Sheet1.Range["rowTtlQuizPts"].Row;
+            int rowSessNo = Globals.WshQuizPts.Range["rowSessionNmbr"].Row;
+            int rowDt = Globals.WshQuizPts.Range["xx"].Row;
+            int rowMsxPts = Globals.WshQuizPts.Range["rowTtlQuizPts"].Row;
 
             BindingList<Session> bl = new BindingList<Session>();
 
@@ -117,10 +117,10 @@ namespace iClickerQuizPtsTracker
                 if($"{c}".Contains("Session"))
                 {
                     int colNo = c.Column;
-                    string sessNo = $"Globals.Sheet1.Cells[rowSessNo,colNo]";
-                    Excel.Range cellDt = Globals.Sheet1.Cells[rowDt, colNo];
+                    string sessNo = $"Globals.WshQuizPts.Cells[rowSessNo,colNo]";
+                    Excel.Range cellDt = Globals.WshQuizPts.Cells[rowDt, colNo];
                     DateTime dt = DateTime.Parse(cellDt.Value);
-                    Excel.Range cellPts = Globals.Sheet1.Cells[rowMsxPts, colNo];
+                    Excel.Range cellPts = Globals.WshQuizPts.Cells[rowMsxPts, colNo];
                     Byte maxPts = byte.Parse(cellPts.Value);
                     Session s = new Session(sessNo, dt, maxPts);
                     bl.Add(s);
@@ -136,7 +136,7 @@ namespace iClickerQuizPtsTracker
         /// </summary>
         public void CreateSessionNosDataTable()
         {
-            int rowOffset = Globals.Sheet1.Range["rowSessionNmbr"].Row -
+            int rowOffset = Globals.WshQuizPts.Range["rowSessionNmbr"].Row -
                 _loQzGrades.HeaderRowRange.Row;
 
             _dtSessNos = new DataTable("ThisWbkSessionNos");

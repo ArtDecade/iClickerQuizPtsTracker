@@ -15,7 +15,7 @@ namespace iClickerQuizPtsTracker
     /// </summary>
     public partial class QuizUserControl : UserControl
     {
-
+#region ctor
         /// <summary>
         /// Instantiates an instance of the workbook&apos;s action panel.
         /// </summary>
@@ -24,7 +24,9 @@ namespace iClickerQuizPtsTracker
             InitializeComponent();
             this.Load += QuizUserControl_Load;
         }
+        #endregion
 
+#region eventHandlers
         private void QuizUserControl_Load(object sender, EventArgs e)
         {
             
@@ -64,7 +66,9 @@ namespace iClickerQuizPtsTracker
         {
 
         }
+        #endregion
 
+#region methods
         /// <summary>
         /// Updates the label at the top of the 
         /// <see cref="iClickerQuizPtsTracker.QuizUserControl"/> to display the date of 
@@ -90,7 +94,7 @@ namespace iClickerQuizPtsTracker
         {
             this.lblMostRecentSessNos.Text = sessNos;
         }
+#endregion
 
-       
     }
 }

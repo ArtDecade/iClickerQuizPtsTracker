@@ -47,9 +47,9 @@ namespace iClickerQuizPtsTracker
         {
             // Define the wsh-ListObj pairs...
             WshListobjPair quizDataLOInfo =
-                new WshListobjPair("tblClkrQuizGrades", Globals.Sheet1.Name);
+                new WshListobjPair("tblClkrQuizGrades", Globals.WshQuizPts.Name);
             WshListobjPair dblDpprsLOInfo =
-                new WshListobjPair("tblDblDippers", Globals.Sheet2.Name);
+                new WshListobjPair("tblDblDippers", Globals.WshDblDpprs.Name);
 
             // Instantiate quiz data class...
             try
@@ -121,7 +121,7 @@ namespace iClickerQuizPtsTracker
             for (int i = 0; i < nms.Length; i++)
             {
                 // Since this is the only sheet holding named ranges...
-                string qzDataWshNm = Globals.Sheet1.Name; 
+                string qzDataWshNm = Globals.WshQuizPts.Name; 
                 string iClikerNm = nms[i];
                 if(!_nrWrppr.WorksheetScopedRangeExists(qzDataWshNm, iClikerNm))
                 {

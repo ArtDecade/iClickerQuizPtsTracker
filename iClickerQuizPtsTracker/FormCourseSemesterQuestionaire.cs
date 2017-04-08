@@ -38,12 +38,12 @@ namespace iClickerQuizPtsTracker
             }
             else
             {
-                Globals.Sheet1.Range["ptrSemester"].Value = this.txtSemester.Text;
-                Globals.Sheet1.Range["ptrSemester"].Locked = true;
-                Globals.Sheet1.Range["ptrCourse"].Value = this.txtSemester.Text;
-                Globals.Sheet1.Range["ptrCourse"].Locked = true;
+                Globals.WshQuizPts.Range["ptrSemester"].Value = this.txtSemester.Text;
+                Globals.WshQuizPts.Range["ptrSemester"].Locked = true;
+                Globals.WshQuizPts.Range["ptrCourse"].Value = this.txtSemester.Text;
+                Globals.WshQuizPts.Range["ptrCourse"].Locked = true;
 
-                Globals.Sheet1.Protect();
+                Globals.WshQuizPts.Protect();
 
                 this.Dispose();
             }
