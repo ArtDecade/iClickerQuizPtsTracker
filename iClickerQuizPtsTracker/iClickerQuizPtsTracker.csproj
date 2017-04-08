@@ -111,7 +111,12 @@
     <Compile Include="NamedRangeWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuizDataParser.cs" />
-    <Compile Include="QuizUserControl.Designer.cs" />
+    <Compile Include="QuizUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="QuizUserControl.designer.cs">
+      <DependentUpon>QuizUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Session.cs" />
     <Compile Include="ThisWbkDataWrapper.cs" />
     <Compile Include="ThisWbkWrapper.cs" />
@@ -150,7 +155,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="QuizUserControl.resx" />
+    <EmbeddedResource Include="QuizUserControl.resx">
+      <DependentUpon>QuizUserControl.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="iClickerQuizPtsTracker.xlsx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
