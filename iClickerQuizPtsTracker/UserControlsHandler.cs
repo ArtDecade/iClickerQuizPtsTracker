@@ -76,7 +76,7 @@ namespace iClickerQuizPtsTracker
         }
         #endregion
 
-        #region 
+        #region methods
         /// <summary>
         /// Sets the <see cref="iClickerQuizPtsTracker.UserControlsHandler.CourseWeek"/> property.
         /// </summary>
