@@ -35,22 +35,12 @@ namespace iClickerQuizPtsTracker.Comparers
         /// </exception>
         public int Compare(Session s1, Session s2)
         {
-            if (s1 != null && s2 != null)
-            {
-                if (s1.QuizDate > s2.QuizDate)
-                    return 1;
-                if (s1.QuizDate < s2.QuizDate)
-                    return -1;
-                else
-                    return 0;
-            }
+            if (s1.QuizDate > s2.QuizDate)
+                return 1;
+            if (s1.QuizDate < s2.QuizDate)
+                return -1;
             else
-            {
-                if (s1 == null)
-                    throw new ArgumentNullException("s1");
-                else
-                    throw new ArgumentNullException("s2");
-            }
+                return 0;
         }
     }
 }

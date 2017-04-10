@@ -12,7 +12,7 @@ namespace iClickerQuizPtsTracker
     /// <summary>
     /// Represents a session during which a student takes an iClicker quiz.
     /// </summary>
-    public class Session
+    public class Session : IEquatable<Session>
     {
         #region fields
         private string _nmbr;
@@ -239,6 +239,14 @@ namespace iClickerQuizPtsTracker
             return false;
         }
 
+        public bool Equals(Session s)
+        {
+            if (s.SessionNo == this.SessionNo)
+                return true;
+            else
+                return false;
+        }
+
         /// <summary>
         /// Determines whether two <see cref="iClickerQuizPtsTracker.Session"/> objects 
         /// have the same value for their <code>SessionNo</code> properties.
@@ -251,7 +259,15 @@ namespace iClickerQuizPtsTracker
         /// </returns>
         public static bool operator == (Session s1, Session s2)
         {
-            return s1.Equals(s2);
+            if(s1 != null && s2 != null)
+                return s1.Equals(s2);
+            else
+            {
+                if (s1 == null)
+                    throw new ArgumentNullException("s1");
+                else
+                    throw new ArgumentNullException("s2");
+            }
         }
 
         /// <summary>
@@ -264,7 +280,15 @@ namespace iClickerQuizPtsTracker
         /// two <see cref="iClickerQuizPtsTracker.Session"/> objects; otherwise <see langword="false"/>.</returns>
         public static bool operator != (Session s1, Session s2)
         {
-            return !s1.Equals(s2);
+            if(s1 != null && s2 != null)
+                return !s1.Equals(s2);
+            else
+            {
+                if (s1 == null)
+                    throw new ArgumentNullException("s1");
+                else
+                    throw new ArgumentNullException("s2");
+            }
         }
 
         /// <summary>
