@@ -12,7 +12,7 @@ namespace iClickerQuizPtsTracker
     /// <summary>
     /// Represents a session during which a student takes an iClicker quiz.
     /// </summary>
-    public class Session : IEquatable<Session>
+    public class Session : IEquatable<Session>, IComparable<Session>
     {
         #region fields
         private string _nmbr;
@@ -227,24 +227,97 @@ namespace iClickerQuizPtsTracker
         /// properties.  Values for all other properties are ignored.  </remarks>
         public override bool Equals(object obj)
         {
-            if (obj is Session && obj != null)
-            {
-                Session temp;
-                temp = (Session)obj;
-                if (temp.SessionNo == this.SessionNo)
-                    return true;
-                else
-                    return false; 
-            }
-            return false;
+            // Run through the generic implementation...
+            return this.Equals(obj as Session);
         }
 
+        /// <summary>
+        /// Determines whether another <see cref="iClickerQuizPtsTracker.Session"/> 
+        /// has the same value for <see cref="iClickerQuizPtsTracker.Session.SessionNo"/> 
+        /// as this <see cref="iClickerQuizPtsTracker.Session"/>.
+        /// </summary>
+        /// <param name="s">The <see cref="iClickerQuizPtsTracker.Session"/> 
+        /// to which we want to test for equality.</param>
+        /// <returns><see langword="true"/>if 
+        /// <list type="bullet">
+        /// <item>
+        /// <description>both this and <code>s</code> are valid 
+        /// <see cref="iClickerQuizPtsTracker.Session"/> references and the values 
+        /// for the <see cref="iClickerQuizPtsTracker.Session.SessionNo"/> property 
+        /// are equal</description>
+        /// </item>
+        /// <item>
+        /// <description>both this and <code>s</code> are <see langword="null"/> 
+        /// references </description>
+        /// </item>
+        /// </list>
+        /// <see langword="false"/>if <list type="bullet">
+        /// <item>
+        /// <description><code>s</code> is a <see langword="null"/> reference  
+        /// but <code>s</code> is a valid 
+        /// <see cref="iClickerQuizPtsTracker.Session"/> reference</description>
+        /// </item>
+        /// <item>
+        /// <description><code>s</code> is a valid <see cref="iClickerQuizPtsTracker.Session"/> 
+        /// reference but this instance is a <see langword="null"/> reference</description>
+        /// </item>
+        /// <item>
+        /// <description>Both this and <code>s</code> are valid 
+        /// <see cref="iClickerQuizPtsTracker.Session"/> references but their values for 
+        /// <see cref="iClickerQuizPtsTracker.Session.SessionNo"/> differ</description>
+        /// </item>
+        /// </list></returns>
         public bool Equals(Session s)
         {
-            if (s.SessionNo == this.SessionNo)
-                return true;
-            else
-                return false;
+            // If parameter is null, return false...
+            if (Object.ReferenceEquals(s, null))
+            { return false; }
+
+            // Optimization for a common success case...
+            if (Object.ReferenceEquals(this, s))
+            { return true; }
+
+            // If run-time types are not exactly the same, return false...
+            if (this.GetType() != s.GetType())
+            { return false; }
+
+            // Return true if SessionNo pptys match...
+            return this.SessionNo == s.SessionNo;
+        }
+
+        /// <summary>
+        /// Compares the value of the the <code>SessionNo</code> property of this 
+        /// instance to value of the same property of a specified 
+        /// <see cref="iClickerQuizPtsTracker.Session"/> and returns an indication
+        /// of their relative values.
+        /// </summary>
+        /// <param name="other">A <see cref="iClickerQuizPtsTracker.Session"/> 
+        /// instance against which to compare 
+        /// <see cref="iClickerQuizPtsTracker.Session.SessionNo"/> values.</param>
+        /// <returns><code>0</code> if the <code>SessionNo</code> values are equal.  
+        /// Otherwise <code>1</code> if the <code>SessionNo</code> value of this 
+        /// instance is higher; <code>-1</code> if the <code>SessionNo</code> 
+        /// value of this instance is lower.</returns>
+        public int CompareTo(Session other)
+        {
+            if(Object.ReferenceEquals(this, null) || Object.ReferenceEquals(other,null))
+            {
+                if (Object.ReferenceEquals(this, null) && Object.ReferenceEquals(other, null))
+                    return 0;
+                else
+                {
+                    if (Object.ReferenceEquals(this, null))
+                        return -1;
+                    else //... other == null
+                        return 1;
+                }
+            }
+            else // ...non-null references
+            {
+                byte sessNmbrThis = byte.Parse(this.SessionNo);
+                byte sessNmbrOther = byte.Parse(other.SessionNo);
+                return sessNmbrThis.CompareTo(sessNmbrOther);
+            }
         }
 
         /// <summary>
@@ -259,15 +332,20 @@ namespace iClickerQuizPtsTracker
         /// </returns>
         public static bool operator == (Session s1, Session s2)
         {
-            if(s1 != null && s2 != null)
-                return s1.Equals(s2);
-            else
+            // Check for null on left side...
+            if (Object.ReferenceEquals(s1, null))
             {
-                if (s1 == null)
-                    throw new ArgumentNullException("s1");
-                else
-                    throw new ArgumentNullException("s2");
+                if (Object.ReferenceEquals(s2, null))
+                {
+                    // null == null = true...
+                    return true;
+                }
+
+                // Only the left side is null...
+                return false;
             }
+            // Equals handles case of null on right side...
+            return s1.Equals(s2);
         }
 
         /// <summary>
@@ -280,15 +358,7 @@ namespace iClickerQuizPtsTracker
         /// two <see cref="iClickerQuizPtsTracker.Session"/> objects; otherwise <see langword="false"/>.</returns>
         public static bool operator != (Session s1, Session s2)
         {
-            if(s1 != null && s2 != null)
-                return !s1.Equals(s2);
-            else
-            {
-                if (s1 == null)
-                    throw new ArgumentNullException("s1");
-                else
-                    throw new ArgumentNullException("s2");
-            }
+            return !(s1 == s2);
         }
 
         /// <summary>
@@ -303,10 +373,23 @@ namespace iClickerQuizPtsTracker
         /// of a second <see cref="iClickerQuizPtsTracker.Session"/> object; otherwise <see langword="false"/>.</returns>
         public static bool operator < (Session s1, Session s2)
         {
-            if (byte.Parse(s1.SessionNo) < byte.Parse(s2.SessionNo))
-                return true;
+            // Nulls are always considered lower in value than an instantiated 
+            // object (2 nulls are considered equal)...
+            if (Object.ReferenceEquals(s1, null) || Object.ReferenceEquals(s2, null))
+            {
+                if (Object.ReferenceEquals(s1, null) && Object.ReferenceEquals(s2, null))
+                    return false;
+                if (Object.ReferenceEquals(s1, null))
+                    return true;
+                else // s2 == null
+                    return false;
+            }
             else
-                return false;
+            {
+                byte sNo1 = byte.Parse(s1.SessionNo);
+                byte sNo2 = byte.Parse(s2.SessionNo);
+                return sNo1 < sNo2;
+            }
         }
 
         /// <summary>
@@ -321,10 +404,23 @@ namespace iClickerQuizPtsTracker
         /// of a second <see cref="iClickerQuizPtsTracker.Session"/> object; otherwise <see langword="false"/>.</returns>
         public static bool operator > (Session s1, Session s2)
         {
-            if (byte.Parse(s1.SessionNo) > byte.Parse(s2.SessionNo))
-                return true;
+            // Nulls are always considered lower in value than an instantiated 
+            // object (2 nulls are considered equal)...
+            if (Object.ReferenceEquals(s1, null) || Object.ReferenceEquals(s2, null))
+            {
+                if (Object.ReferenceEquals(s1, null) && Object.ReferenceEquals(s2, null))
+                    return false;
+                if (Object.ReferenceEquals(s1, null))
+                    return false;
+                else // s2 == null
+                    return true;
+            }
             else
-                return false;
+            {
+                byte sNo1 = byte.Parse(s1.SessionNo);
+                byte sNo2 = byte.Parse(s2.SessionNo);
+                return sNo1 > sNo2;
+            }
         }
 
         /// <summary>
@@ -339,10 +435,23 @@ namespace iClickerQuizPtsTracker
         /// of a second <see cref="iClickerQuizPtsTracker.Session"/> object; otherwise <see langword="false"/>.</returns>
         public static bool operator <= (Session s1, Session s2)
         {
-            if (byte.Parse(s1.SessionNo) <= byte.Parse(s2.SessionNo))
-                return true;
+            // Nulls are always considered lower in value than an instantiated 
+            // object (2 nulls are considered equal)...
+            if (Object.ReferenceEquals(s1, null) || Object.ReferenceEquals(s2, null))
+            {
+                if (Object.ReferenceEquals(s1, null) && Object.ReferenceEquals(s2, null))
+                    return true;
+                if (Object.ReferenceEquals(s1, null))
+                    return true;
+                else // s2 == null
+                    return false;
+            }
             else
-                return false;
+            {
+                byte sNo1 = byte.Parse(s1.SessionNo);
+                byte sNo2 = byte.Parse(s2.SessionNo);
+                return sNo1 <= sNo2;
+            }
         }
 
         /// <summary>
@@ -357,10 +466,23 @@ namespace iClickerQuizPtsTracker
         /// of a second <see cref="iClickerQuizPtsTracker.Session"/> object; otherwise <see langword="false"/>.</returns>
         public static bool operator >= (Session s1, Session s2)
         {
-            if (byte.Parse(s1.SessionNo) >= byte.Parse(s2.SessionNo))
-                return true;
+            // Nulls are always considered lower in value than an instantiated 
+            // object (2 nulls are considered equal)...
+            if (Object.ReferenceEquals(s1, null) || Object.ReferenceEquals(s2, null))
+            {
+                if (Object.ReferenceEquals(s1, null) && Object.ReferenceEquals(s2, null))
+                    return true;
+                if (Object.ReferenceEquals(s1, null))
+                    return false;
+                else // s2 == null
+                    return true;
+            }
             else
-                return false;
+            {
+                byte sNo1 = byte.Parse(s1.SessionNo);
+                byte sNo2 = byte.Parse(s2.SessionNo);
+                return sNo1 >= sNo2;
+            }
         }
         #endregion
         #endregion
