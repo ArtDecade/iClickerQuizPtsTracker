@@ -108,7 +108,6 @@
     <Compile Include="AppExceptions\MissingWshException.cs" />
     <Compile Include="AppExceptions\ReadingExternalWbkException.cs" />
     <Compile Include="Comparers\SessionDateComparer.cs" />
-    <Compile Include="Comparers\SessionNmbrComparer.cs" />
     <Compile Include="EPPlusManager.cs" />
     <Compile Include="ExternalWbkWrapper.cs" />
     <Compile Include="FormCourseSemesterQuestionaire.cs">

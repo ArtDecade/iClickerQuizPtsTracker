@@ -14,7 +14,7 @@ namespace iClickerQuizPts.UnitTests
 {
     [TestFixture]
     [Category("SessionComparer")]
-    public class SessionComparerTests
+    public class SessionDateComparerTests
     {
         const string SESS_NO = "01";
         const byte MAX_PTS = 2;
