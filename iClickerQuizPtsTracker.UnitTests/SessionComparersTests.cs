@@ -71,46 +71,41 @@ namespace iClickerQuizPts.UnitTests
         }
 
         [TestCase("04/05/2012")]
-        public void VerifyDateComparer_Sess1Null_Throws(string dt2)
+        public void VerifyDateComparer_Sess01Null_RtnsNeg1(string dt2)
         {
             DateTime qzDt02 = DateTime.Parse(dt2);
             Session s1 = null;
             Session s2 = new Session(SESS_NO, qzDt02, MAX_PTS);
             SessionDateComparer comparerDt = new SessionDateComparer();
-            int comprsn;
 
-            var ex = Assert.Catch<ArgumentNullException>(() =>
-                comprsn = comparerDt.Compare(s1, s2));
+            int comprsn = comparerDt.Compare(s1, s2);
+
+            Assert.AreEqual(-1, comprsn);
         }
 
         [TestCase("04/05/2012")]
-        public void VerifyDateComparer_Sess02Null_Throws(string dt1)
+        public void VerifyDateComparer_Sess02Null_RtnsPos1(string dt1)
         {
             DateTime qzDt01 = DateTime.Parse(dt1);
             Session s1 = new Session(SESS_NO, qzDt01, MAX_PTS);
             Session s2 = null;
             SessionDateComparer comparerDt = new SessionDateComparer();
-            int comprsn;
 
-            var ex = Assert.Catch<ArgumentNullException>(() =>
-                comprsn = comparerDt.Compare(s1, s2));
+            int comprsn = comparerDt.Compare(s1, s2);
+
+            Assert.AreEqual(1, comprsn);
         }
 
         [TestCase]
-        public void VerifyDateComparer_BothSessnsNull_Throws()
+        public void VerifyDateComparer_BothSessnsNull_Rtns0()
         {
             Session s1 = null;
             Session s2 = null;
             SessionDateComparer comparerDt = new SessionDateComparer();
-            int comprsn;
 
-            var ex = Assert.Catch<ArgumentNullException>(() =>
-                comprsn = comparerDt.Compare(s1, s2));
+            int comprsn = comparerDt.Compare(s1, s2);
+
+            Assert.Zero(comprsn);
         }
-
-
-
-
-
     }
 }

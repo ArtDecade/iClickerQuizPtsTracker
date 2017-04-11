@@ -30,17 +30,24 @@ namespace iClickerQuizPtsTracker.Comparers
         /// object Session in. </para>
         /// <para>Otherwise 0.</para>
         /// </returns>
-        /// <exception cref="ArgumentException">Either or both parameters 
-        /// is/are a <see langword="null"/> reference.
-        /// </exception>
-        public int Compare(Session s1, Session s2)
+         public int Compare(Session s1, Session s2)
         {
-            if (s1.QuizDate > s2.QuizDate)
-                return 1;
-            if (s1.QuizDate < s2.QuizDate)
-                return -1;
+            if(Object.ReferenceEquals(s1,null) || Object.ReferenceEquals(s2,null))
+            {
+                if (Object.ReferenceEquals(s1, null) && Object.ReferenceEquals(s2, null))
+                    return 0;
+                else
+                {
+                    if(Object.ReferenceEquals(s1, null))
+                    { return -1; }
+                    else
+                    { return 1; }
+                }
+            }
             else
-                return 0;
+            {
+                return DateTime.Compare(s1.QuizDate, s2.QuizDate);
+            }
         }
     }
 }
