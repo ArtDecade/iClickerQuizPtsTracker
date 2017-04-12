@@ -89,7 +89,7 @@ namespace iClickerQuizPtsTracker
         /// <param name="wbkFullNm">The full name (i.e., including path) of the
         /// Excel file containing the raw iClicker quiz points data.</param>
         /// <exception cref="iClickerQuizPtsTracker.AppExceptions.ReadingExternalWbkException">
-        /// The file is either a *.csv and *.xlx files (or a different kind 
+        /// The file is either a *.csv and *.xls files (or a different kind 
         /// of file entirely).</exception>
         /// <exception cref="iClickerQuizPtsTracker.AppExceptions.InalidAppConfigItemException">
         /// An entry in the <code>appSettings</code> section in the <code>App.config</code> 
