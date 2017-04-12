@@ -86,7 +86,7 @@ namespace iClickerQuizPtsTracker
         #region pptys
         /// <summary>
         /// Gets a <see cref="System.Collections.Generic.List{String}"/> 
-        /// containing any keys withing the <code>App.Config</code> 
+        /// containing any keys within the <code>App.Config</code> 
         /// file which cannot be found by the 
         /// <see cref="System.Configuration.AppSettingsReader.GetValue(string, Type)"/> 
         /// method.
