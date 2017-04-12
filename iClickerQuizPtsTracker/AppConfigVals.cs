@@ -9,6 +9,10 @@ using iClickerQuizPtsTracker.AppExceptions;
 
 namespace iClickerQuizPtsTracker
 {
+    /// <summary>
+    /// Provides a centralized (static) method for accessing values in 
+    /// the app.config file.
+    /// </summary>
     class AppConfigVals
     {
         #region fields
@@ -17,19 +21,76 @@ namespace iClickerQuizPtsTracker
         #endregion
 
         #region public
+        /// <summary>
+        /// Gets the column number within raw iClicker files 
+        /// containing student emails.
+        /// </summary>
         public static readonly byte ExtFileColNoStudentEmail;
+        /// <summary>
+        /// Gets the column number within raw iClicker files 
+        /// containing student names.
+        /// </summary>
         public static readonly byte ExtFileColNoStudentName;
+        /// <summary>
+        /// Gets the number of columns of row labels within 
+        /// raw iClicker files - i.e., the number of columns 
+        /// <em>not</em> containing quiz scores.
+        /// </summary>
         public static readonly byte ExtFileNmbrRowLblCols;
+        /// <summary>
+        /// Gets the number of columns of row labels within 
+        /// the WshQuizPts sheet of this workboook - i.e., the 
+        /// number of columns <em>not</em> containing quiz scores.
+        /// </summary>
         public static readonly byte DataTblNmbrRowLblCols;
 
-        public static readonly string DataTblColNoID;
-        public static readonly string DataTblColNoEmail;
-        public static readonly string DataTblColNoLNm;
-        public static readonly string DataTblColNoFNm;
+        /// <summary>
+        /// Gets the value to be used for the
+        /// <see cref="System.Data.DataColumn.ColumnName"/> 
+        /// property of the <see cref="System.Data.DataColumn"/> 
+        /// containing unique (primary key) IDs within the 
+        /// <see cref="System.Data.DataTable"/> built from 
+        /// a raw iClicker file.
+        /// </summary>
+        public static readonly string DataTblColNmID;
+        /// <summary>
+        /// Gets the value to be used for the
+        /// <see cref="System.Data.DataColumn.ColumnName"/> 
+        /// property of the <see cref="System.Data.DataColumn"/> 
+        /// containing student emails within the 
+        /// <see cref="System.Data.DataTable"/> built from 
+        /// a raw iClicker file.
+        /// </summary>
+        public static readonly string DataTblColNmEmail;
+        /// <summary>
+        /// Gets the value to be used for the
+        /// <see cref="System.Data.DataColumn.ColumnName"/> 
+        /// property of the <see cref="System.Data.DataColumn"/> 
+        /// containing student last names within the 
+        /// <see cref="System.Data.DataTable"/> built from 
+        /// a raw iClicker file.
+        /// </summary>
+        public static readonly string DataTblColNmLNm;
+        /// <summary>
+        /// Gets the value to be used for the
+        /// <see cref="System.Data.DataColumn.ColumnName"/> 
+        /// property of the <see cref="System.Data.DataColumn"/> 
+        /// containing student first names within the 
+        /// <see cref="System.Data.DataTable"/> built from 
+        /// a raw iClicker file.
+        /// </summary>
+        public static readonly string DataTblColNmFNm;
         #endregion
         #endregion
 
         #region pptys
+        /// <summary>
+        /// Gets a <see cref="System.Collections.Generic.List{String}"/> 
+        /// containing any keys withing the <code>App.Config</code> 
+        /// file which cannot be found by the 
+        /// <see cref="System.Configuration.AppSettingsReader.GetValue(string, Type)"/> 
+        /// method.
+        /// </summary>
         public static List<String> BadAppConfigKeys
         {
             get
@@ -40,6 +101,10 @@ namespace iClickerQuizPtsTracker
         #endregion
 
         #region ctor
+        /// <summary>
+        /// Initializes the <see cref="iClickerQuizPtsTracker.AppConfigVals"/> 
+        /// static class.
+        /// </summary>
         static AppConfigVals()
         {
             #region populateReadOnlyFields
@@ -86,7 +151,7 @@ namespace iClickerQuizPtsTracker
 
             try
             {
-                DataTblColNoID = (string)ar.GetValue("ColID", typeof(string));
+                DataTblColNmID = (string)ar.GetValue("ColID", typeof(string));
             }
             catch
             {
@@ -95,7 +160,7 @@ namespace iClickerQuizPtsTracker
 
             try
             {
-                DataTblColNoEmail = (string)ar.GetValue("ColEmail", typeof(string));
+                DataTblColNmEmail = (string)ar.GetValue("ColEmail", typeof(string));
             }
             catch
             {
@@ -104,7 +169,7 @@ namespace iClickerQuizPtsTracker
 
             try
             {
-                DataTblColNoFNm = (string)ar.GetValue("ColFN", typeof(string));
+                DataTblColNmFNm = (string)ar.GetValue("ColFN", typeof(string));
             }
             catch
             {
@@ -113,7 +178,7 @@ namespace iClickerQuizPtsTracker
 
             try
             {
-                DataTblColNoLNm = (string)ar.GetValue("ColLN", typeof(string));
+                DataTblColNmLNm = (string)ar.GetValue("ColLN", typeof(string));
             }
             catch
             {

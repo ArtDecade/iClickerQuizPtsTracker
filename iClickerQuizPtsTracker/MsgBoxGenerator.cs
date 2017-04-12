@@ -17,7 +17,7 @@ namespace iClickerQuizPtsTracker
         private static string _caption = string.Empty;
         private static string _msg = string.Empty;
         private const string CANNOT_CONTINUE = 
-            "You will not be able to continue until this workbook has been repaired.";
+            "You will not be able to continue until this has been repaired.";
         private const string MSG_VAL = "[MISSING VALUE]";
 
         private static void ResetClassFields()
@@ -146,14 +146,22 @@ namespace iClickerQuizPtsTracker
         /// a <see cref="iClickerQuizPtsTracker.AppExceptions.InalidAppConfigItemException"/> is thrown.
         /// </summary>
         /// <param name="acKey">The key we are attempting to find.</param>
-        public static void SetInvalidAppConfigKeyMsg(string acKey)
+        public static void SetInvalidAppConfigKeyMsg()
         {
+            string msngKeys = String.Empty;
+
             _caption = "Missing App.Config File Key";
 
             const string S1 =
-                "We cannot find the following key inside the appSettings section of the App.Config file:";
+                "We cannot find the following key(s) inside the appSettings section of the App.Config file:";
+            const string S3 = "These keys have either been renamed or deleted.";
+            
+            for(int i = 1;i <= AppConfigVals.BadAppConfigKeys.Count; i++)
+            {
+                msngKeys = string.Format($"{msngKeys}\n\t{AppConfigVals.BadAppConfigKeys[i - 1]}");
+            }
 
-            _msg = string.Format($"{S1}\n\n\t{acKey}\n\n{CANNOT_CONTINUE}");
+            _msg = string.Format($"{S1}\n{msngKeys}\n\n{S3}\n\n{CANNOT_CONTINUE}");
         }
 
         /// <summary>

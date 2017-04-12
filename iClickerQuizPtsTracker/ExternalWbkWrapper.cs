@@ -23,7 +23,6 @@ namespace iClickerQuizPtsTracker
     public class ExternalWbkWrapper
     {
         #region fields
-        private readonly byte _firstDateCol; // ...to be read from App.config file
         private Excel.Workbook _wbkTestData = null;
         #endregion
 

@@ -217,7 +217,7 @@ namespace iClickerQuizPtsTracker
             }
             catch (InalidAppConfigItemException ex)
             {
-                MsgBoxGenerator.SetInvalidAppConfigKeyMsg(ex.MissingKey);
+                MsgBoxGenerator.SetInvalidAppConfigKeyMsg();
                 MsgBoxGenerator.ShowMsg(MessageBoxButtons.OK);
                 return; // ...terminate program execution
             }
