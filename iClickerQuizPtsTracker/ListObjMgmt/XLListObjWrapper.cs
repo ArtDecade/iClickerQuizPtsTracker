@@ -144,18 +144,14 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
         /// otherwise <c>false</c>.</returns>
         public virtual bool DoesParentWshExist()
         {
-            bool exists = false;
-            int noWshs = Globals.ThisWorkbook.Worksheets.Count;
-            for (int i = 1; i <= noWshs; i++)
+            foreach(Excel.Worksheet ws in Globals.ThisWorkbook.Worksheets)
             {
-                Excel.Worksheet ws = Globals.ThisWorkbook.Worksheets[i];
                 if(ws.Name == _wshLoPr.WshNm)
                 {
-                    exists = true;
-                    break;
+                    return true;
                 }
             }
-            return exists;
+            return false;
         }
 
         /// <summary>
@@ -165,24 +161,18 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
         /// otherwise <c>false</c>.</returns>
         public virtual bool DoesListObjExist()
         {
-            bool exists = false;
-            int tbls = _ws.ListObjects.Count;
-
-            if (tbls == 0)
-                return exists;
+            if (_ws.ListObjects.Count == 0)
+                return false;
             else
             {
-                for (int i = 1; i <= tbls; i++)
+                foreach(Excel.ListObject tbl in _ws.ListObjects)
                 {
-                    Excel.ListObject tbl;
-                    tbl = _ws.ListObjects[i];
-                    if (tbl.Name == _wshLoPr.ListObjName)
+                    if(tbl.Name == _wshLoPr.ListObjName)
                     {
-                        exists = true;
-                        break;
+                        return true;
                     }
                 }
-                return exists;
+                return false;
             }
         }
 
@@ -194,25 +184,22 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
         /// contains data; otherwise <c>false</c>.</returns>
         protected virtual bool DoesListObjHaveData()
         {
-            bool hasData = false; // ...default
-
             // Now see if there are data...
             if (_lo.ListRows.Count > 1)
-                hasData = true;
+                return true;
             else
             {
                 Excel.Range c;
                 for(int i = 1; i <= _lo.ListColumns.Count;i++)
                 {
                     c = _lo.DataBodyRange[1, i];
-                    if(c.Value2 != null)
+                    if(c.Value != null)
                     {
-                        hasData = true;
-                        break;
+                        return true;
                     }
                 }
+                return false;
             }
-            return hasData; 
         }
         #endregion
     }
