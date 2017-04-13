@@ -8,6 +8,7 @@ using System.Configuration;
 using iClickerQuizPtsTracker.ListObjMgmt;
 using iClickerQuizPtsTracker.AppExceptions;
 using Excel = Microsoft.Office.Interop.Excel;
+using static iClickerQuizPtsTracker.AppConfigVals;
 
 namespace iClickerQuizPtsTracker
 {
@@ -19,9 +20,9 @@ namespace iClickerQuizPtsTracker
     {
         #region fields
         private bool _virginWbk;
-        private byte _nmbNonScoreCols;
         private QuizDataLOWrapper _qdLOWrppr;
         private DblDippersLOWrapper _ddsLOWrppr;
+        private StudentsAddedLOWrapper _saLOWrppr;
         private NamedRangeWrapper _nrWrppr = new NamedRangeWrapper();
         #endregion
 
@@ -47,9 +48,11 @@ namespace iClickerQuizPtsTracker
         {
             // Define the wsh-ListObj pairs...
             WshListobjPair quizDataLOInfo =
-                new WshListobjPair("tblClkrQuizGrades", Globals.WshQuizPts.Name);
+                new WshListobjPair("tblQuizPts", Globals.WshQuizPts.Name);
             WshListobjPair dblDpprsLOInfo =
                 new WshListobjPair("tblDblDippers", Globals.WshDblDpprs.Name);
+            WshListobjPair stdntsAddedLOInfo =
+                new WshListobjPair("tblFirstQuizDts", Globals.WshStdntsAdded.Name);
 
             // Instantiate quiz data class...
             try
@@ -81,6 +84,24 @@ namespace iClickerQuizPtsTracker
             try
             {
                 _ddsLOWrppr.SetListObjAndParentWshPpts();
+            }
+            catch (ApplicationException ex)
+            {
+                throw ex;
+            }
+
+            // Instantiate student first-quiz dates class...
+            try
+            {
+                _saLOWrppr = new StudentsAddedLOWrapper(stdntsAddedLOInfo);
+            }
+            catch (ApplicationException ex)
+            {
+                throw ex;
+            }
+            try
+            {
+                _saLOWrppr.SetListObjAndParentWshPpts();
             }
             catch (ApplicationException ex)
             {
@@ -129,28 +150,6 @@ namespace iClickerQuizPtsTracker
                         new MissingInvalidNmdRngException(RangeScope.Wksheet, iClikerNm, qzDataWshNm);
                     throw ex;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Populates one or more fields with values from the <code>appSettings</code> 
-        /// section of the <code>App.Config</code> file.
-        /// </summary>
-        /// <exception cref="iClickerQuizPtsTracker.AppExceptions.InalidAppConfigItemException">
-        /// Thrown if the specified key value cannot be found in the <code>App.Config</code> file.
-        /// </exception>
-        public virtual void ReadAppConfigDataIntoFields()
-        {
-            AppSettingsReader ar = new AppSettingsReader();
-            try
-            {
-                _nmbNonScoreCols = (byte)ar.GetValue("NmbrNonScoreCols", typeof(byte));
-            }
-            catch
-            {
-                InalidAppConfigItemException ex = new InalidAppConfigItemException();
-                ex.MissingKey = "NmbrNonScoreCols";
-                throw ex;
             }
         }
 

@@ -210,17 +210,6 @@ namespace iClickerQuizPtsTracker
                 MsgBoxGenerator.ShowMsg(MessageBoxButtons.OK);
                 return; // ...terminate program execution
             }
-
-            try
-            {
-                _twbkWrapper.ReadAppConfigDataIntoFields();
-            }
-            catch (InalidAppConfigItemException ex)
-            {
-                MsgBoxGenerator.SetInvalidAppConfigKeyMsg();
-                MsgBoxGenerator.ShowMsg(MessageBoxButtons.OK);
-                return; // ...terminate program execution
-            }
             #endregion
 
             _twbkWrapper.SetVirginWbkProperty();

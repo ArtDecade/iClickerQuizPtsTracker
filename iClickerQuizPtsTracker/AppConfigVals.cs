@@ -13,7 +13,7 @@ namespace iClickerQuizPtsTracker
     /// Provides a centralized (static) method for accessing values in 
     /// the app.config file.
     /// </summary>
-    class AppConfigVals
+    public static class AppConfigVals
     {
         #region fields
         #region private

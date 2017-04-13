@@ -187,16 +187,13 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
             // Now see if there are data...
             if (_lo.ListRows.Count > 1)
                 return true;
-            else
+            else 
             {
-                Excel.Range c;
-                for(int i = 1; i <= _lo.ListColumns.Count;i++)
+                // DataBodyRange is only 1 row...
+                foreach(Excel.Range c in _lo.DataBodyRange)
                 {
-                    c = _lo.DataBodyRange[1, i];
-                    if(c.Value != null)
-                    {
+                    if (c.Value != null)
                         return true;
-                    }
                 }
                 return false;
             }

@@ -118,6 +118,7 @@
     <Compile Include="Itfs\INamedRangeWrapping.cs" />
     <Compile Include="ListObjMgmt\DblDippersLOWrapper.cs" />
     <Compile Include="ListObjMgmt\QuizDataLOWrapper.cs" />
+    <Compile Include="ListObjMgmt\StudentsAddedLOWrapper.cs" />
     <Compile Include="ListObjMgmt\XLListObjWrapper.cs" />
     <Compile Include="MsgBoxGenerator.cs" />
     <Compile Include="NamedRangeWrapper.cs" />

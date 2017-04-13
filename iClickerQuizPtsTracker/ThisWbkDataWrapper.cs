@@ -92,6 +92,8 @@ namespace iClickerQuizPtsTracker
         /// </returns>
         public IEnumerable<string> RetrieveSessionNumbers()
         {
+
+
             Array arColHdrs = (Array)_loQzGrades.HeaderRowRange;
             IEnumerable<string> _enumSessionNos = from string h in arColHdrs
                                                   where (h.Contains("Session"))
