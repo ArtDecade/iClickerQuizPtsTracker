@@ -121,10 +121,10 @@ namespace iClickerQuizPtsTracker
         private List<DateTime> _qzDts = new List<DateTime>();
         private List<string> _sessionNos = new List<string>();
         private Excel.ListObject _tblQuizGrades = null;
-        private List<WshListobjPair> _listObjsByWsh = new List<WshListobjPair>();
+        private List<WshListobjPair> _listObjsByWsh = 
+            new List<WshListobjPair>();
 
         private ThisWbkWrapper _twbkWrapper;
-        private ThisWbkDataWrapper _twbkDataWrppr;
 
         private QuizDataLOWrapper _qdLOMgr;
         private DblDippersLOWrapper _ddsLOMgr;
@@ -205,31 +205,21 @@ namespace iClickerQuizPtsTracker
             }
             catch (MissingInvalidNmdRngException ex)
             {
-                MsgBoxGenerator.SetMissingInvalidWshNmdRngMsg(ex.ParentWsh, ex.RangeName);
+                MsgBoxGenerator.SetMissingInvalidWshNmdRngMsg(
+                    ex.ParentWsh, ex.RangeName);
                 MsgBoxGenerator.ShowMsg(MessageBoxButtons.OK);
                 return; // ...terminate program execution
             }
             #endregion
-            // Set with defaults for virgin wbk...
-            string latestQzDt = "No data yet.";
-            string latestSsnNos = " -- ";
 
             _twbkWrapper.SetVirginWbkProperty();
             if (_twbkWrapper.IsVirginWbk)
-            {
                 _twbkWrapper.PromptUserForCourseNameAndSemester();
-            }
-            else
-            {
-                _twbkDataWrppr = new ThisWbkDataWrapper();
-                //_twbkDataWrppr.
-
-                // TODO:  Set latest quiz date field in control panel...
-
-            }
-            _ctrl.SetLabelForMostRecentQuizDate(latestQzDt);
-            _ctrl.SetLabelForMostRecentSessionNos(latestSsnNos);
-
+            
+            _ctrl.SetLabelForMostRecentQuizDate(
+                ThisWbkDataWrapper.MostRecentQuizDate);
+            _ctrl.SetLabelForMostRecentSessionNos(
+                ThisWbkDataWrapper.MostRecentSessNos);
         }
 
         private void ThisWorkbook_Shutdown(object sender, System.EventArgs e)
@@ -264,6 +254,5 @@ namespace iClickerQuizPtsTracker
         }
 
         #endregion
-
     }
 }

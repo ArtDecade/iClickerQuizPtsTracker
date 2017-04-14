@@ -8,6 +8,8 @@ using System.ComponentModel;
 using System.Data;
 using Excel = Microsoft.Office.Interop.Excel;
 using iClickerQuizPtsTracker.AppExceptions;
+using iClickerQuizPtsTracker.Comparers;
+using static iClickerQuizPtsTracker.AppConfigVals;
 
 namespace iClickerQuizPtsTracker
 {
@@ -21,9 +23,14 @@ namespace iClickerQuizPtsTracker
 
         #region fields
         static Excel.ListObject _loQzGrades;
+        static Excel.Range _rngHdrzQzGradeCols;
         static DataTable _dtSessNos;
         static DataTable _dtEmls;
-        static string _mostRecentQuizDt;
+        static string _mostRecentQuizDt = "No data yet.";
+        static string _mostRecentSessNos = " -- ";
+
+        static BindingList<Session> _blSessions;
+
         #endregion
 
         #region ppts
@@ -58,6 +65,28 @@ namespace iClickerQuizPtsTracker
             { return _mostRecentQuizDt; }
         }
 
+        /// <summary>
+        /// Gets the number of the most recent Session.
+        /// </summary>
+        /// <remarks>
+        /// If there was more than one Session conducted on the most 
+        /// recent date gets the numbers of all such Sessions.</remarks>
+        public static string MostRecentSessNos
+        {
+            get
+            { return _mostRecentSessNos; }
+        }
+
+        /// <summary>
+        /// Gets all <see cref="iClickerQuizPtsTracker.Session"/> objects
+        /// in the <code>WshQuizPts</code> <see cref="Excel.Worksheet"/>.
+        /// </summary>
+        public static BindingList<Session> BListSession
+        {
+            get
+            { return _blSessions; }
+        }
+
         #endregion
 
         #region ctor
@@ -67,10 +96,53 @@ namespace iClickerQuizPtsTracker
         static ThisWbkDataWrapper()
         {
             _loQzGrades = Globals.WshQuizPts.ListObjects["tblQuizPts"];
+            if(_loQzGrades.Range.Columns.Count > DataTblNmbrRowLblCols)
+            {
+                DefineQuizGradeColHeadersRange();
+                PopulateSessionsBindingList();
+                SetMostRecentSessDateNmbrsPptys();
+            }
+            
         }
         #endregion
 
         #region methods
+        private static void DefineQuizGradeColHeadersRange()
+        {
+            int ttlTblCols = _loQzGrades.ListColumns.Count;
+            // 2-step definition...
+            _rngHdrzQzGradeCols = 
+                _loQzGrades.HeaderRowRange.Resize[1, ttlTblCols - DataTblNmbrRowLblCols];
+            _rngHdrzQzGradeCols = _rngHdrzQzGradeCols.Offset[0, DataTblNmbrRowLblCols];
+        }
+        
+        private static void SetMostRecentSessDateNmbrsPptys()
+        {
+            SessionDateComparer dtComprr = new SessionDateComparer();
+            Session newestSess = null;
+            int comprsn;
+            foreach(Session s in _blSessions)
+            {
+                comprsn = dtComprr.Compare(s, newestSess);
+                // Note:  1st session will always be greater than null...
+                switch (comprsn)
+                {
+                    case 1:
+                        newestSess = s;
+                        _mostRecentSessNos = s.SessionNo;
+                        break;
+                    case 0:
+                        // We only need to add Session number...
+                        _mostRecentSessNos =
+                            string.Format($"{_mostRecentSessNos}, {s.SessionNo}");
+                        break;
+                    default:
+                        break;
+                }
+            }
+            _mostRecentQuizDt = newestSess.QuizDate.ToShortDateString();
+        }
+        
         /// <summary>
         /// Retreives all student emails from the iCLICKERQuizPoints worksheet.
         /// </summary>
@@ -92,8 +164,6 @@ namespace iClickerQuizPtsTracker
         /// </returns>
         public static IEnumerable<string> RetrieveSessionNumbers()
         {
-
-
             Array arColHdrs = (Array)_loQzGrades.HeaderRowRange;
             IEnumerable<string> _enumSessionNos = from string h in arColHdrs
                                                   where (h.Contains("Session"))
@@ -102,33 +172,31 @@ namespace iClickerQuizPtsTracker
             return _enumSessionNos;
         }
 
-        /// <summary>
-        /// Retreives the quiz data column headers in this workbook.
-        /// </summary>
-        /// <returns>All the quiz sessions already downloaded into this workbook.</returns>
-        public static BindingList<Session> RetrieveSessions()
+        private static void PopulateSessionsBindingList()
         {
+            int rowWeek = Globals.WshQuizPts.Range["rowCourseWk"].Row;
+            int rowSessEnum = Globals.WshQuizPts.Range["rowSessionEnum"].Row;
             int rowSessNo = Globals.WshQuizPts.Range["rowSessionNmbr"].Row;
             int rowDt = Globals.WshQuizPts.Range["rowSessionDt"].Row;
             int rowMsxPts = Globals.WshQuizPts.Range["rowTtlQuizPts"].Row;
 
-            BindingList<Session> bl = new BindingList<Session>();
-
-            foreach (Excel.Range c in _loQzGrades.HeaderRowRange)
+            foreach (Excel.Range c in _rngHdrzQzGradeCols)
             {
-                if($"{c}".Contains("Session"))
-                {
-                    int colNo = c.Column;
-                    string sessNo = $"Globals.WshQuizPts.Cells[rowSessNo,colNo]";
-                    Excel.Range cellDt = Globals.WshQuizPts.Cells[rowDt, colNo];
-                    DateTime dt = DateTime.Parse(cellDt.Value);
-                    Excel.Range cellPts = Globals.WshQuizPts.Cells[rowMsxPts, colNo];
-                    Byte maxPts = byte.Parse(cellPts.Value);
-                    Session s = new Session(sessNo, dt, maxPts);
-                    bl.Add(s);
-                }
+                int colNo = c.Column;
+                string sessNo = $"{Globals.WshQuizPts.Cells[rowSessNo,colNo]}";
+
+                Excel.Range cellDt = Globals.WshQuizPts.Cells[rowDt, colNo];
+                DateTime dt = DateTime.Parse(cellDt.Value);
+
+                Excel.Range cellPts = Globals.WshQuizPts.Cells[rowMsxPts, colNo];
+                byte maxPts = byte.Parse(cellPts.Value);
+
+                byte whichSess = 
+                    byte.Parse($"{Globals.WshQuizPts.Cells[rowSessEnum, colNo]}");
+                byte courseWk = Globals.WshQuizPts.Cells[rowWeek, colNo];
+                Session s = new Session(sessNo, dt, maxPts, courseWk, whichSess);
+                _blSessions.Add(s);
             }
-            return bl;
         }
 
         /// <summary>

@@ -20,6 +20,8 @@ namespace iClickerQuizPtsTracker
         private byte _maxPts;
         private string _comboBxText;
         private string _wbkColHdr;
+        private WkSession _sessEnum;
+        private byte _courseWk;
         #endregion
 
         #region ppts
@@ -126,7 +128,23 @@ namespace iClickerQuizPtsTracker
         /// <param name="sessDate">The date of the session.</param>
         /// <param name="maxPts">The maximum number of points that a student 
         /// can earn from the Session&apos;s iClicker quiz.</param>
-        public Session(string sessNo, DateTime sessDate, byte maxPts)
+        public Session(string sessNo, DateTime sessDate, byte maxPts) :
+            this(sessNo,sessDate,maxPts,0,0)
+        { }
+
+        /// <summary>
+        /// Instantiates an instance of a <see cref="iClickerQuizPtsTracker.Session"/>.
+        /// </summary>
+        /// <param name="sessNo">The number of the iClicker session.</param>
+        /// <param name="sessDate">The date of the session.</param>
+        /// <param name="maxPts">The maximum number of points that a student 
+        /// can earn from the Session&apos;s iClicker quiz.</param>
+        /// <param name="courseWk">The course week to which this Session&apos;s 
+        /// quiz applies.</param>
+        /// <param name="whichSession">Which Session within a given course week 
+        /// (e.g., 1 for 1st, 2 for 2nd, etc.).</param>
+        public Session(string sessNo, DateTime sessDate, byte maxPts, 
+            byte courseWk, byte whichSession)
         {
             // This sessNo check SHOULD be unnecessary, but just in case...
             if (sessNo.Length == 1)
@@ -135,6 +153,22 @@ namespace iClickerQuizPtsTracker
                 _nmbr = sessNo;
             _date = sessDate;
             _maxPts = maxPts;
+            _courseWk = courseWk;
+            switch(whichSession)
+            {
+                case 1:
+                    _sessEnum = WkSession.First;
+                    break;
+                case 2:
+                    _sessEnum = WkSession.Second;
+                    break;
+                case 3:
+                    _sessEnum = WkSession.Third;
+                    break;
+                default:
+                    _sessEnum = WkSession.None;
+                    break;
+            }
         }
         #endregion
 

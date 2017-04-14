@@ -21,7 +21,6 @@ namespace iClickerQuizPtsTracker
         private static WkSession _session = WkSession.None;
         private static DataTable _dtSortedSsnsAll;
         private static EPPlusManager _eppMgr;
-        private static ThisWbkDataWrapper _thisWbkDataWrppr = new ThisWbkDataWrapper();
         private static BindingList<Session> _blAllSessns = new BindingList<Session>();
         private static BindingList<Session> _blNewSessns = new BindingList<Session>();
         #endregion
@@ -130,8 +129,8 @@ namespace iClickerQuizPtsTracker
             _blAllSessns = _eppMgr.BListSessionsAll;
 
             // Get BindingList of existing Sessions...
-            BindingList<Session> blExisting = _thisWbkDataWrppr.RetrieveSessions();
-
+            BindingList<Session> blExisting = ThisWbkDataWrapper.BListSession;
+            
             // Create BindingList of new Sessions...
             var newSessns = (from Session sAll
                              in _eppMgr.BListSessionsAll
