@@ -115,8 +115,8 @@ namespace iClickerQuizPtsTracker
     {
         #region Fields
         private string[] _wbkNmdRngs = { "ptrSemester", "ptrCourse" };
-        private string[] _wshNmdRngs =
-            { "rowSessionNmbr", "rowCourseWk", "rowSession", "rowTtlPts" };
+        private string[] _wshNmdRngs = {"rowCourseWk", "rowSessionDt",
+                    "rowSessionEnum", "rowSessionNmbr", "rowTtlPts"};
         private QuizUserControl _ctrl = new QuizUserControl();
         private List<DateTime> _qzDts = new List<DateTime>();
         private List<string> _sessionNos = new List<string>();
@@ -124,6 +124,7 @@ namespace iClickerQuizPtsTracker
         private List<WshListobjPair> _listObjsByWsh = new List<WshListobjPair>();
 
         private ThisWbkWrapper _twbkWrapper;
+        private ThisWbkDataWrapper _twbkDataWrppr;
 
         private QuizDataLOWrapper _qdLOMgr;
         private DblDippersLOWrapper _ddsLOMgr;
@@ -200,9 +201,7 @@ namespace iClickerQuizPtsTracker
 
             try
             {
-                string[] wshXLNms = {"rowCourseWkNmbr", "rowSessionEnum",
-                    "rowSessionNmbr", "rowTtlQuizPts"};
-                _twbkWrapper.VerifyWshScopedNames(wshXLNms);
+                _twbkWrapper.VerifyWshScopedNames(_wshNmdRngs);
             }
             catch (MissingInvalidNmdRngException ex)
             {
@@ -211,20 +210,26 @@ namespace iClickerQuizPtsTracker
                 return; // ...terminate program execution
             }
             #endregion
+            // Set with defaults for virgin wbk...
+            string latestQzDt = "No data yet.";
+            string latestSsnNos = " -- ";
 
             _twbkWrapper.SetVirginWbkProperty();
             if (_twbkWrapper.IsVirginWbk)
             {
                 _twbkWrapper.PromptUserForCourseNameAndSemester();
-                _ctrl.SetLabelForMostRecentQuizDate("No data yet.");
-                _ctrl.SetLabelForMostRecentSessionNos(" -- ");
             }
             else
-            // TODO:  Set latest quiz date field in control panel...
             {
+                _twbkDataWrppr = new ThisWbkDataWrapper();
+                //_twbkDataWrppr.
 
+                // TODO:  Set latest quiz date field in control panel...
 
             }
+            _ctrl.SetLabelForMostRecentQuizDate(latestQzDt);
+            _ctrl.SetLabelForMostRecentSessionNos(latestSsnNos);
+
         }
 
         private void ThisWorkbook_Shutdown(object sender, System.EventArgs e)

@@ -15,15 +15,15 @@ namespace iClickerQuizPtsTracker
     /// Provides a wrapper class for interacting with the <see cref="System.Data.DataTable"/> 
     /// of student quiz scores stored in this workbook.
     /// </summary>
-    public class ThisWbkDataWrapper
+    public static class ThisWbkDataWrapper
     {
         // Student ID	Last Name	First Name	Semester TOTAL
 
         #region fields
-        Excel.ListObject _loQzGrades;
-        DataTable _dtSessNos;
-        DataTable _dtEmls;
-        string _mostRecentQuizDt;
+        static Excel.ListObject _loQzGrades;
+        static DataTable _dtSessNos;
+        static DataTable _dtEmls;
+        static string _mostRecentQuizDt;
         #endregion
 
         #region ppts
@@ -31,7 +31,7 @@ namespace iClickerQuizPtsTracker
         /// Gets a <see cref="System.Data.DataTable"/> of Session 
         /// Numbers that have been loaded into this workbook.
         /// </summary>
-        public DataTable SessionNmbrs
+        public static DataTable SessionNmbrs
         {
             get
             { return _dtSessNos; }
@@ -42,7 +42,7 @@ namespace iClickerQuizPtsTracker
         /// addresses of all the students who have any quiz grade 
         /// activity at all loaded into this workbook.
         /// </summary>
-        public DataTable StudentEmails
+        public static DataTable StudentEmails
         {
             get
             { return _dtEmls; }
@@ -52,7 +52,7 @@ namespace iClickerQuizPtsTracker
         /// Gets the most recent quiz date within the already-imported 
         /// quiz data.
         /// </summary>
-        public string MostRecentQuizDate
+        public static string MostRecentQuizDate
         {
             get
             { return _mostRecentQuizDt; }
@@ -64,9 +64,9 @@ namespace iClickerQuizPtsTracker
         /// <summary>
         /// Creates an instance of the <see cref="iClickerQuizPtsTracker.ThisWbkDataWrapper"/> class.
         /// </summary>
-        public ThisWbkDataWrapper()
+        static ThisWbkDataWrapper()
         {
-            _loQzGrades = Globals.WshQuizPts.ListObjects["tblClkrQuizGrades"];
+            _loQzGrades = Globals.WshQuizPts.ListObjects["tblQuizPts"];
         }
         #endregion
 
@@ -75,7 +75,7 @@ namespace iClickerQuizPtsTracker
         /// Retreives all student emails from the iCLICKERQuizPoints worksheet.
         /// </summary>
         /// <returns>All student email in the &quot;Student ID&quot; column.</returns>
-        public IEnumerable<string> RetrieveStudentEmails()
+        public static IEnumerable<string> RetrieveStudentEmails()
         {
             Array arEmls = (Array)_loQzGrades.ListColumns["Student ID"].DataBodyRange;
             IEnumerable<string> _enumEmls = from string e in arEmls
@@ -90,7 +90,7 @@ namespace iClickerQuizPtsTracker
         /// <returns>
         /// All Session Numbers for which the worksheet has quiz scores.
         /// </returns>
-        public IEnumerable<string> RetrieveSessionNumbers()
+        public static IEnumerable<string> RetrieveSessionNumbers()
         {
 
 
@@ -106,10 +106,10 @@ namespace iClickerQuizPtsTracker
         /// Retreives the quiz data column headers in this workbook.
         /// </summary>
         /// <returns>All the quiz sessions already downloaded into this workbook.</returns>
-        public BindingList<Session> RetrieveSessions()
+        public static BindingList<Session> RetrieveSessions()
         {
             int rowSessNo = Globals.WshQuizPts.Range["rowSessionNmbr"].Row;
-            int rowDt = Globals.WshQuizPts.Range["xx"].Row;
+            int rowDt = Globals.WshQuizPts.Range["rowSessionDt"].Row;
             int rowMsxPts = Globals.WshQuizPts.Range["rowTtlQuizPts"].Row;
 
             BindingList<Session> bl = new BindingList<Session>();
@@ -136,7 +136,7 @@ namespace iClickerQuizPtsTracker
         /// which contains all of the Session information for quiz scores
         /// already imported into this workbook.
         /// </summary>
-        public void CreateSessionNosDataTable()
+        public static void CreateSessionNosDataTable()
         {
             int rowOffset = Globals.WshQuizPts.Range["rowSessionNmbr"].Row -
                 _loQzGrades.HeaderRowRange.Row;
@@ -166,7 +166,7 @@ namespace iClickerQuizPtsTracker
         /// which contains all student emails already imported 
         /// into this workbook.
         /// </summary>
-        public void CreateStudentEmailDataTable()
+        public static void CreateStudentEmailDataTable()
         {
             _dtEmls = new DataTable("ThisWbkEmails");
             DataColumn colEml = new DataColumn("StudentEml", typeof(string));
@@ -189,7 +189,7 @@ namespace iClickerQuizPtsTracker
         /// </summary>
         /// <param name="colHdr">A column header from the QuizPts worksheet.</param>
         /// <returns>The date of the quiz for the scores contained in the column.</returns>
-        public DateTime GetDatePortionFromColHeader(string colHdr)
+        public static DateTime GetDatePortionFromColHeader(string colHdr)
         {
             int posHypen = colHdr.IndexOf("-");
             return DateTime.Parse(colHdr.Substring(posHypen + 1).Trim());
