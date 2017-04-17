@@ -151,7 +151,7 @@ namespace iClickerQuizPtsTracker
 
                     if (!ws.Cells["A1"].Value.ToString().Trim().Equals("Student ID") ||
                         !ws.Cells["B1"].Value.ToString().Trim().Equals("Student Name") ||
-                        !ws.Cells["C3"].Value.ToString().Trim().EndsWith("TOTAL"))
+                        !ws.Cells["C1"].Value.ToString().Trim().EndsWith("TOTAL"))
                     {
                         string msg = "Incorrect column headings for columns A, B, and/or C";
                         ReadingExternalWbkException ex =
@@ -167,6 +167,7 @@ namespace iClickerQuizPtsTracker
                      * 
                      */
                     // Find last col in wsh (header row should always have values)...
+                    _lastCol = ws.Dimension.End.Column;
                     while (_lastCol > 1)
                     {
                         ExcelRange c = ws.Cells[1, _lastCol];
@@ -186,6 +187,7 @@ namespace iClickerQuizPtsTracker
                     }
 
                     // Find last row of data in wsh.  Student ID column should always have an entry...
+                    _lastRow = ws.Dimension.End.Row;
                     while (_lastRow > 1)
                     {
                         ExcelRange c = ws.Cells[_lastRow, ExtFileColNoStudentEmail];
@@ -241,6 +243,7 @@ namespace iClickerQuizPtsTracker
                     {
                         string rawColHdr = ws.Cells[1, i].Value.ToString().Trim();
                         DataColumn col = new DataColumn(rawColHdr, typeof(byte));
+                        col.AllowDBNull = true;
                         try
                         {
                             Session s = new Session(rawColHdr);
@@ -261,7 +264,7 @@ namespace iClickerQuizPtsTracker
                             col.ExtendedProperties["QuizDate"] = s.QuizDate.ToShortDateString();
                             col.ExtendedProperties["MaxQuizPts"] = s.MaxPts.ToString().PadLeft(2, '0');
                             col.ExtendedProperties["ComboBoxLbl"] =
-                                string.Format($"Session {s.SessionNo} - {s.QuizDate}");
+                                string.Format($"Session {s.SessionNo} - {s.QuizDate.ToShortDateString()}");
                             _dtAllScores.Columns.Add(col);
                         }
                         catch
@@ -275,7 +278,7 @@ namespace iClickerQuizPtsTracker
 
                     /*
                      * 
-                     * POPULATE ROWS WITH DATA THEN ADD TO DATATABLE...
+                     * POPULATE ROWS WITH DATA THEN ADD EACH ROW TO DATATABLE...
                      * 
                      */
                     string studentFullNm;
@@ -295,7 +298,9 @@ namespace iClickerQuizPtsTracker
                         {
                             // Populate quiz data fields...
                             string colNm = ws.Cells[1, colNo].Value.ToString().Trim();
-                            r[colNm] = ws.Cells[rowNo, colNo].Value;
+                            object objSc = ws.Cells[rowNo, colNo].Value;
+                            if (objSc != null)
+                                r[colNm] = objSc;
                         }
                         _dtAllScores.Rows.Add(r); // ...add row to dataTable
                     }
