@@ -171,7 +171,7 @@ namespace iClickerQuizPtsTracker
             if (fd.Show() == -1) // ...-1 == file selected; 0 == user cxled
             {
                 userSelectedWbk = true;
-                dataFileFullNm = fd.SelectedItems.Item(0);
+                dataFileFullNm = fd.SelectedItems.Item(1);
             }
             return userSelectedWbk;
         }
