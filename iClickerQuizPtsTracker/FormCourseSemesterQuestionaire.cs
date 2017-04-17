@@ -40,7 +40,7 @@ namespace iClickerQuizPtsTracker
             {
                 Globals.WshQuizPts.Range["ptrSemester"].Value = this.txtSemester.Text;
                 Globals.WshQuizPts.Range["ptrSemester"].Locked = true;
-                Globals.WshQuizPts.Range["ptrCourse"].Value = this.txtSemester.Text;
+                Globals.WshQuizPts.Range["ptrCourse"].Value = this.txtCourseNm.Text;
                 Globals.WshQuizPts.Range["ptrCourse"].Locked = true;
 
                 Globals.WshQuizPts.Protect();

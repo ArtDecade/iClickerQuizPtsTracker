@@ -76,7 +76,7 @@ namespace iClickerQuizPtsTracker
             {
                 
                 // char(33) == Exclamation pt (i.e., "!")...
-                if(n.Name == String.Format($"{wshNm}char(33){rngNm}"))
+                if(n.Name == String.Format($"{wshNm}{((char)33).ToString()}{rngNm}"))
                 {
                     rngFound = true;
                     break;
