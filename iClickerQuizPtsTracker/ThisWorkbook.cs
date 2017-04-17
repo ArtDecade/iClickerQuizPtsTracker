@@ -220,6 +220,8 @@ namespace iClickerQuizPtsTracker
                 ThisWbkDataWrapper.MostRecentQuizDate);
             _ctrl.SetLabelForMostRecentSessionNos(
                 ThisWbkDataWrapper.MostRecentSessNos);
+
+            // TODO:  Add prompt for user to save the workbook under a new name.
         }
 
         private void ThisWorkbook_Shutdown(object sender, System.EventArgs e)

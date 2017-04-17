@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using static iClickerQuizPtsTracker.UserControlsHandler;
+
 namespace iClickerQuizPtsTracker
 {
     /// <summary>
@@ -34,7 +36,7 @@ namespace iClickerQuizPtsTracker
 
         private void btnOpenQuizWbk_Click(object sender, EventArgs e)
         {
-
+            ImportDataMaestro();
             // Automatically select new Sessions...
             radNewDatesOnly.Checked = true;
         }
