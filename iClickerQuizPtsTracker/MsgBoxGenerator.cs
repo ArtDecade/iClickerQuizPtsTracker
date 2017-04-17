@@ -138,7 +138,7 @@ namespace iClickerQuizPtsTracker
 
             // Build the message...
             _msg = string.Format($"{S1}\n\n\tNamed Range:  {rngNm}\n\tWorksheet:  {wsh}");
-            _msg = string.Format($"_msg\n\n{S2}{S3}\n\n\n{CANNOT_CONTINUE}");
+            _msg = string.Format($"{_msg}\n\n{S2}{S3}\n\n\n{CANNOT_CONTINUE}");
         }
 
         /// <summary>

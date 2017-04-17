@@ -74,7 +74,9 @@ namespace iClickerQuizPtsTracker
             bool rngFound = false;
             foreach(Excel.Name n in ws.Names)
             {
-                if(n.Name == rngNm)
+                
+                // char(33) == Exclamation pt (i.e., "!")...
+                if(n.Name == String.Format($"{wshNm}char(33){rngNm}"))
                 {
                     rngFound = true;
                     break;
