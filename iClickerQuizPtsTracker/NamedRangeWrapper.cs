@@ -24,14 +24,13 @@ namespace iClickerQuizPtsTracker
         /// <see cref="Excel.Range"/>; otherwise <c>false</c>.</returns>
         public virtual bool WorkbookScopedRangeExists(string rngNm)
         {
-            bool rngFound = false;
-            int nmbrWbkNmz = Globals.ThisWorkbook.Names.Count;
-            Excel.Name wbkNm;
+            if (Globals.ThisWorkbook.Names.Count == 0)
+                return false;
 
-            for(int i = 1; i <= nmbrWbkNmz; i++)
+            bool rngFound = false;
+            foreach (Excel.Name n in Globals.ThisWorkbook.Names)
             {
-                wbkNm = Globals.ThisWorkbook.Names.Item(i);
-                if(wbkNm.Name == rngNm)
+                if (n.Name == rngNm)
                 {
                     rngFound = true;
                     break;
@@ -43,21 +42,19 @@ namespace iClickerQuizPtsTracker
             else // ...the named range exists
             {
                 // Compiler needs to see that we have, in fact, assigned a value to this variable...
-                wbkNm = Globals.ThisWorkbook.Names.Item(rngNm);
-
+                Excel.Name wbkScopedNm = Globals.ThisWorkbook.Names.Item(rngNm);
+               
                 // Now see if the named range has a valid reference...
                 try
                 {
-                    Excel.Range r = wbkNm.RefersToRange;
+                    Excel.Range r = wbkScopedNm.RefersToRange;
                 }
                 catch
                 {
-                    rngFound = false;
+                    return false;
                 }
             }
-
-            // If the catch clause was not hit the variable remains true...
-            return rngFound;
+            return true;
         }
 
         /// <summary>
@@ -70,15 +67,14 @@ namespace iClickerQuizPtsTracker
         /// <see cref="Excel.Range"/>; otherwise <c>false</c>.</returns>
         public virtual bool WorksheetScopedRangeExists(string wshNm, string rngNm)
         {
-            bool rngFound = false;
             Excel.Worksheet ws = Globals.ThisWorkbook.Worksheets.Item[wshNm];
-            int nmbrWshNms = ws.Names.Count;
-            Excel.Name XLnm;
+            if (ws.Names.Count == 0)
+                return false;
 
-            for (int i = 1; i <= nmbrWshNms; i++)
+            bool rngFound = false;
+            foreach(Excel.Name n in ws.Names)
             {
-                XLnm = ws.Names.Item(i);
-                if (XLnm.Name == rngNm)
+                if(n.Name == rngNm)
                 {
                     rngFound = true;
                     break;
@@ -90,21 +86,20 @@ namespace iClickerQuizPtsTracker
             else // ...the named range exists
             {
                 // Compiler needs to see that we have, in fact, assigned a value to this variable...
-                XLnm = ws.Names.Item(rngNm);
+                Excel.Name wshScpdNm = ws.Names.Item(rngNm);
 
                 // Now see if the named range has a valid reference...
                 try
                 {
-                    Excel.Range r = XLnm.RefersToRange;
+
+                    Excel.Range r = wshScpdNm.RefersToRange;
                 }
                 catch
                 {
-                    rngFound = false;
+                    return false;
                 }
             }
-
-            // If the catch clause was not hit the variable remains true...
-            return rngFound;
+            return true;
         }
     }
 }
