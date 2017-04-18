@@ -38,15 +38,23 @@ namespace iClickerQuizPtsTracker
         {
             ImportDataMaestro();
             // Automatically select new Sessions...
-            radNewDatesOnly.Checked = true;
+            if (ThisWbkDataWrapper.BListSession == null)
+            {
+                radAllDates.Checked = true;
+                radNewDatesOnly.Enabled = false;
+            }
+            else
+            {
+                radNewDatesOnly.Checked = true;
+            }
         }
 
         private void radioButton_CheckedChanged(object sender, EventArgs e)
         {
             if (this.radNewDatesOnly.Checked == true)
-                this.comboSession.DataSource = UserControlsHandler.BindingListNewSessions; 
+                this.comboQuizDates.DataSource = UserControlsHandler.BindingListNewSessions; 
             else // ...all dates
-                this.comboSession.DataSource = UserControlsHandler.BindingListAllSessions; 
+                this.comboQuizDates.DataSource = UserControlsHandler.BindingListAllSessions; 
         }
 
         private void comboQuizDates_SelectedIndexChanged(object sender, EventArgs e)

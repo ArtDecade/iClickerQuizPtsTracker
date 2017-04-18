@@ -132,7 +132,7 @@ namespace iClickerQuizPtsTracker
             BindingList<Session> blExisting = ThisWbkDataWrapper.BListSession;
 
             // Create BindingList of new Sessions...
-            if (blExisting.Count == 0)
+            if (blExisting == null)
             {
                 foreach (Session s in _blAllSessns)
                     _blNewSessns.Add(s);
