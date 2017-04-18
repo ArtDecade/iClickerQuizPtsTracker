@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Excel = Microsoft.Office.Interop.Excel;
 using System.Configuration;
 using iClickerQuizPtsTracker.AppExceptions;
 using System.Data;
@@ -281,30 +282,73 @@ namespace iClickerQuizPtsTracker
                      * POPULATE ROWS WITH DATA THEN ADD EACH ROW TO DATATABLE...
                      * 
                      */
+                    object stEmail;
                     string studentFullNm;
+                    string studentLNm;
+                    string studentFNm;
 
                     // Loop through each data row...
                     for (int rowNo = 2; rowNo <= _lastRow; rowNo++)
                     {
-                        DataRow r = _dtAllScores.NewRow();
-                        // Populate student name & email fields...
-                        r[DataTblColNmEmail] = ws.Cells[rowNo, ExtFileColNoStudentEmail].Value.ToString().Trim();
+                        stEmail = ws.Cells[rowNo, ExtFileColNoStudentEmail].Value;
                         studentFullNm = ws.Cells[rowNo, ExtFileColNoStudentName].Value.ToString();
-                        r[DataTblColNmLNm] = _hdrParser.ExtractLastNameFromFullName(studentFullNm);
-                        r[DataTblColNmFNm] = _hdrParser.ExtractFirstNameFromFullName(studentFullNm);
+                        studentLNm = _hdrParser.ExtractLastNameFromFullName(studentFullNm);
+                        studentFNm = _hdrParser.ExtractFirstNameFromFullName(studentFullNm);
 
-                        // Loop through each quiz data column...
-                        for (int colNo = ExtFileNmbrRowLblCols + 1; colNo <= _lastCol; colNo++)
+                        // Trap for missing email rows...
+                        if (stEmail == null)
                         {
-                            // Populate quiz data fields...
-                            string colNm = ws.Cells[1, colNo].Value.ToString().Trim();
-                            object objSc = ws.Cells[rowNo, colNo].Value;
-                            if (objSc != null)
-                                r[colNm] = objSc;
+                            AddNoEmailStudentToWsh(studentFNm, studentLNm);
                         }
-                        _dtAllScores.Rows.Add(r); // ...add row to dataTable
+                        else
+                        {
+                            DataRow r = _dtAllScores.NewRow();
+                            // Populate student name & email fields...
+                            r[DataTblColNmEmail] = ws.Cells[rowNo, ExtFileColNoStudentEmail].Value.ToString().Trim();
+                            r[DataTblColNmLNm] = studentLNm;
+                            r[DataTblColNmFNm] = studentFNm;
+
+                            // Loop through each quiz data column...
+                            for (int colNo = ExtFileNmbrRowLblCols + 1; colNo <= _lastCol; colNo++)
+                            {
+                                // Populate quiz data fields...
+                                string colNm = ws.Cells[1, colNo].Value.ToString().Trim();
+                                object objSc = ws.Cells[rowNo, colNo].Value;
+                                if (objSc != null)
+                                    r[colNm] = objSc;
+                            }
+                            _dtAllScores.Rows.Add(r); // ...add row to dataTable
+                        }
                     }
                 }
+            }
+        }
+
+        private void AddNoEmailStudentToWsh(string fNm, string lNm)
+        {
+            Excel.ListObject loNoEml = Globals.WshNoEmail.ListObjects["tblNoEmail"];
+            string existingFNm;
+            string existingLNm;
+            bool tblHasData = false;
+            if (loNoEml.DataBodyRange.Rows.Count > 1)
+                tblHasData = true;
+            else
+            {
+                Excel.ListColumn locolFNm = loNoEml.ListColumns["First Name"];
+                Excel.ListColumn locolLNm = loNoEml.ListColumns["Last Name"];
+                Excel.Range rngFNms = locolFNm.DataBodyRange;
+                Excel.Range rngLNms = locolLNm.DataBodyRange;
+
+                existingFNm = rngFNms[1, 1].Value;
+                existingLNm = rngLNms[1, 1].Value;
+                existingFNm = rngFNms.Cells[1, 1].Value;
+                existingLNm = rngLNms.Cells[1, 1].Value;
+
+                //// get element value by column name and row index
+                //object val = ((Excel.Range)xtbl.Range.get_Item(RowInd, xtbl.ListColumns.get_Item(ColName).Index)).Value2;
+
+                //// get element by row and column index
+                //object val = ((Excel.Range)xtbl.Range.get_Item(RowInd, ColInd)).Value2;
             }
         }
         #endregion

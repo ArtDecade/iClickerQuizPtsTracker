@@ -13,25 +13,11 @@ namespace iClickerQuizPtsTracker {
     
     
     /// 
-    [Microsoft.VisualStudio.Tools.Applications.Runtime.StartupObjectAttribute(1)]
+    [Microsoft.VisualStudio.Tools.Applications.Runtime.StartupObjectAttribute(4)]
     [global::System.Security.Permissions.PermissionSetAttribute(global::System.Security.Permissions.SecurityAction.Demand, Name="FullTrust")]
-    public sealed partial class WshQuizPts : Microsoft.Office.Tools.Excel.WorksheetBase {
+    public sealed partial class WshNoEmail : Microsoft.Office.Tools.Excel.WorksheetBase {
         
-        internal Microsoft.Office.Tools.Excel.ListObject tblQuizPts;
-        
-        internal Microsoft.Office.Tools.Excel.NamedRange ptrCourse;
-        
-        internal Microsoft.Office.Tools.Excel.NamedRange ptrSemester;
-        
-        internal Microsoft.Office.Tools.Excel.NamedRange WshQuizPts_rowCourseWk;
-        
-        internal Microsoft.Office.Tools.Excel.NamedRange WshQuizPts_rowSessionNmbr;
-        
-        internal Microsoft.Office.Tools.Excel.NamedRange WshQuizPts_rowTtlPts;
-        
-        internal Microsoft.Office.Tools.Excel.NamedRange WshQuizPts_rowSessionDt;
-        
-        internal Microsoft.Office.Tools.Excel.NamedRange WshQuizPts_rowSessionEnum;
+        internal Microsoft.Office.Tools.Excel.ListObject tblFirstQuizDts5;
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Tools.Office.ProgrammingModel.dll", "15.0.0.0")]
         private global::System.Object missing = global::System.Type.Missing;
@@ -39,8 +25,8 @@ namespace iClickerQuizPtsTracker {
         /// 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public WshQuizPts(global::Microsoft.Office.Tools.Excel.Factory factory, global::System.IServiceProvider serviceProvider) : 
-                base(factory, serviceProvider, "WshQuizPts", "WshQuizPts") {
+        public WshNoEmail(global::Microsoft.Office.Tools.Excel.Factory factory, global::System.IServiceProvider serviceProvider) : 
+                base(factory, serviceProvider, "WshNoEmail", "WshNoEmail") {
         }
         
         /// 
@@ -49,7 +35,7 @@ namespace iClickerQuizPtsTracker {
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
         protected override void Initialize() {
             base.Initialize();
-            Globals.WshQuizPts = this;
+            Globals.WshNoEmail = this;
             global::System.Windows.Forms.Application.EnableVisualStyles();
             this.InitializeCachedData();
             this.InitializeControls();
@@ -130,14 +116,7 @@ namespace iClickerQuizPtsTracker {
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
         private void BeginInitialization() {
             this.BeginInit();
-            this.tblQuizPts.BeginInit();
-            this.ptrCourse.BeginInit();
-            this.ptrSemester.BeginInit();
-            this.WshQuizPts_rowCourseWk.BeginInit();
-            this.WshQuizPts_rowSessionNmbr.BeginInit();
-            this.WshQuizPts_rowTtlPts.BeginInit();
-            this.WshQuizPts_rowSessionDt.BeginInit();
-            this.WshQuizPts_rowSessionEnum.BeginInit();
+            this.tblFirstQuizDts5.BeginInit();
         }
         
         /// 
@@ -145,14 +124,7 @@ namespace iClickerQuizPtsTracker {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Tools.Office.ProgrammingModel.dll", "15.0.0.0")]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
         private void EndInitialization() {
-            this.WshQuizPts_rowSessionEnum.EndInit();
-            this.WshQuizPts_rowSessionDt.EndInit();
-            this.WshQuizPts_rowTtlPts.EndInit();
-            this.WshQuizPts_rowSessionNmbr.EndInit();
-            this.WshQuizPts_rowCourseWk.EndInit();
-            this.ptrSemester.EndInit();
-            this.ptrCourse.EndInit();
-            this.tblQuizPts.EndInit();
+            this.tblFirstQuizDts5.EndInit();
             this.EndInit();
         }
         
@@ -161,14 +133,7 @@ namespace iClickerQuizPtsTracker {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Tools.Office.ProgrammingModel.dll", "15.0.0.0")]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
         private void InitializeControls() {
-            this.tblQuizPts = Globals.Factory.CreateListObject(null, null, "WshQuizPts:tblQuizPts", "tblQuizPts", this);
-            this.ptrCourse = Globals.Factory.CreateNamedRange(null, null, "ptrCourse", "ptrCourse", this);
-            this.ptrSemester = Globals.Factory.CreateNamedRange(null, null, "ptrSemester", "ptrSemester", this);
-            this.WshQuizPts_rowCourseWk = Globals.Factory.CreateNamedRange(null, null, "WshQuizPts!rowCourseWk", "WshQuizPts_rowCourseWk", this);
-            this.WshQuizPts_rowSessionNmbr = Globals.Factory.CreateNamedRange(null, null, "WshQuizPts!rowSessionNmbr", "WshQuizPts_rowSessionNmbr", this);
-            this.WshQuizPts_rowTtlPts = Globals.Factory.CreateNamedRange(null, null, "WshQuizPts!rowTtlPts", "WshQuizPts_rowTtlPts", this);
-            this.WshQuizPts_rowSessionDt = Globals.Factory.CreateNamedRange(null, null, "WshQuizPts!rowSessionDt", "WshQuizPts_rowSessionDt", this);
-            this.WshQuizPts_rowSessionEnum = Globals.Factory.CreateNamedRange(null, null, "WshQuizPts!rowSessionEnum", "WshQuizPts_rowSessionEnum", this);
+            this.tblFirstQuizDts5 = Globals.Factory.CreateListObject(null, null, "WshNoEmail:tblFirstQuizDts5", "tblFirstQuizDts5", this);
         }
         
         /// 
@@ -176,41 +141,6 @@ namespace iClickerQuizPtsTracker {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Tools.Office.ProgrammingModel.dll", "15.0.0.0")]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
         private void InitializeComponents() {
-            // 
-            // tblQuizPts
-            // 
-            this.tblQuizPts.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
-            // 
-            // ptrCourse
-            // 
-            this.ptrCourse.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
-            // 
-            // ptrSemester
-            // 
-            this.ptrSemester.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
-            // 
-            // WshQuizPts_rowCourseWk
-            // 
-            this.WshQuizPts_rowCourseWk.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
-            // 
-            // WshQuizPts_rowSessionNmbr
-            // 
-            this.WshQuizPts_rowSessionNmbr.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
-            // 
-            // WshQuizPts_rowTtlPts
-            // 
-            this.WshQuizPts_rowTtlPts.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
-            // 
-            // WshQuizPts_rowSessionDt
-            // 
-            this.WshQuizPts_rowSessionDt.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
-            // 
-            // WshQuizPts_rowSessionEnum
-            // 
-            this.WshQuizPts_rowSessionEnum.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
-            // 
-            // WshQuizPts
-            // 
         }
         
         /// 
@@ -225,29 +155,22 @@ namespace iClickerQuizPtsTracker {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Tools.Office.ProgrammingModel.dll", "15.0.0.0")]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
         protected override void OnShutdown() {
-            this.WshQuizPts_rowSessionEnum.Dispose();
-            this.WshQuizPts_rowSessionDt.Dispose();
-            this.WshQuizPts_rowTtlPts.Dispose();
-            this.WshQuizPts_rowSessionNmbr.Dispose();
-            this.WshQuizPts_rowCourseWk.Dispose();
-            this.ptrSemester.Dispose();
-            this.ptrCourse.Dispose();
-            this.tblQuizPts.Dispose();
+            this.tblFirstQuizDts5.Dispose();
             base.OnShutdown();
         }
     }
     
     internal sealed partial class Globals {
         
-        private static WshQuizPts _WshQuizPts;
+        private static WshNoEmail _WshNoEmail;
         
-        internal static WshQuizPts WshQuizPts {
+        internal static WshNoEmail WshNoEmail {
             get {
-                return _WshQuizPts;
+                return _WshNoEmail;
             }
             set {
-                if ((_WshQuizPts == null)) {
-                    _WshQuizPts = value;
+                if ((_WshNoEmail == null)) {
+                    _WshNoEmail = value;
                 }
                 else {
                     throw new System.NotSupportedException();

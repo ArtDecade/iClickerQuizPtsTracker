@@ -23,11 +23,13 @@ namespace iClickerQuizPtsTracker
         private QuizDataLOWrapper _qdLOWrppr;
         private DblDippersLOWrapper _ddsLOWrppr;
         private StudentsAddedLOWrapper _saLOWrppr;
+        private NoEmailLOWrapper _noEmlsWrppr;
         private NamedRangeWrapper _nrWrppr = new NamedRangeWrapper();
         #endregion
 
         #region ppts
         //// QuizDataListObjMgr QuizData
+
 
         /// <summary>
         /// Gets a value indicating whether this workbook is yet populated 
@@ -53,6 +55,8 @@ namespace iClickerQuizPtsTracker
                 new WshListobjPair("tblDblDippers", Globals.WshDblDpprs.Name);
             WshListobjPair stdntsAddedLOInfo =
                 new WshListobjPair("tblFirstQuizDts", Globals.WshStdntsAdded.Name);
+            WshListobjPair noEmailInfo =
+                new WshListobjPair("tblNoEmail", Globals.WshNoEmail.Name);
 
             // Instantiate quiz data class...
             try
@@ -102,6 +106,24 @@ namespace iClickerQuizPtsTracker
             try
             {
                 _saLOWrppr.SetListObjAndParentWshPpts();
+            }
+            catch (ApplicationException ex)
+            {
+                throw ex;
+            }
+
+            // Instantiate email-less students class...
+            try
+            {
+                _noEmlsWrppr = new NoEmailLOWrapper(noEmailInfo)
+            }
+            catch (ApplicationException ex)
+            {
+                throw ex;
+            }
+            try
+            {
+                _noEmlsWrppr.SetListObjAndParentWshPpts();
             }
             catch (ApplicationException ex)
             {

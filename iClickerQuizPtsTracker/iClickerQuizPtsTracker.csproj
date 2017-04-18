@@ -117,6 +117,7 @@
     <Compile Include="FormCourseSemesterQuestionaire.Designer.cs" />
     <Compile Include="Itfs\INamedRangeWrapping.cs" />
     <Compile Include="ListObjMgmt\DblDippersLOWrapper.cs" />
+    <Compile Include="ListObjMgmt\NoEmailLOWrapper.cs" />
     <Compile Include="ListObjMgmt\QuizDataLOWrapper.cs" />
     <Compile Include="ListObjMgmt\StudentsAddedLOWrapper.cs" />
     <Compile Include="ListObjMgmt\XLListObjWrapper.cs" />
@@ -145,6 +146,12 @@
     </Compile>
     <Compile Include="WshDblDpprs.Designer.cs">
       <DependentUpon>WshDblDpprs.Designer.xml</DependentUpon>
+    </Compile>
+    <Compile Include="WshNoEmail1.cs">
+      <DependentUpon>iClickerQuizPtsTracker.xlsx</DependentUpon>
+    </Compile>
+    <Compile Include="WshNoEmail1.Designer.cs">
+      <DependentUpon>WshNoEmail1.Designer.xml</DependentUpon>
     </Compile>
     <Compile Include="WshQuizPts.cs">
       <DependentUpon>iClickerQuizPtsTracker.xlsx</DependentUpon>
@@ -205,7 +212,11 @@
       <DependentUpon>WshStdntsAdded.cs</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="WshNoEmail1.Designer.xml">
+      <DependentUpon>WshNoEmail1.cs</DependentUpon>
+    </None>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -228,6 +239,7 @@
         <Host Name="Excel Document" Path=".\iClickerQuizPtsTracker.xlsx" GeneratedCodeNamespace="iClickerQuizPtsTracker">
           <HostItem Name="ThisWorkbook" Code="ThisWorkbook.cs" CanonicalName="ThisWorkbook" Blueprint="ThisWorkbook.Designer.xml" GeneratedCode="ThisWorkbook.Designer.cs" />
           <HostItem Name="WshDblDpprs" Code="WshDblDpprs.cs" CanonicalName="WshDblDpprs" DisplayName="DoubleDippers" Blueprint="WshDblDpprs.Designer.xml" GeneratedCode="WshDblDpprs.Designer.cs" />
+          <HostItem Name="WshNoEmail" Code="WshNoEmail1.cs" CanonicalName="WshNoEmail" DisplayName="Email-lessStudents" Blueprint="WshNoEmail1.Designer.xml" GeneratedCode="WshNoEmail1.Designer.cs" />
           <HostItem Name="WshQuizPts" Code="WshQuizPts.cs" CanonicalName="WshQuizPts" DisplayName="iClickerQuizPts" Blueprint="WshQuizPts.Designer.xml" GeneratedCode="WshQuizPts.Designer.cs" />
           <HostItem Name="WshStdntsAdded" Code="WshStdntsAdded.cs" CanonicalName="WshStdntsAdded" DisplayName="StudentsAddedByDate" Blueprint="WshStdntsAdded.Designer.xml" GeneratedCode="WshStdntsAdded.Designer.cs" />
         </Host>
