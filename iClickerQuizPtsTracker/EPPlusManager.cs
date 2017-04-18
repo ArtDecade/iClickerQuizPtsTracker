@@ -51,6 +51,7 @@ namespace iClickerQuizPtsTracker
         private string _wbkFullNm;
         private DataTable _dtAllScores;
         private QuizDataParser _hdrParser = new QuizDataParser();
+        private Session[] _arrSessions;
         private BindingList<Session> _blistSssnsAll = new BindingList<Session>();
         #endregion
 
@@ -248,6 +249,7 @@ namespace iClickerQuizPtsTracker
                         try
                         {
                             Session s = new Session(rawColHdr);
+                            
                             if (!_blistSssnsAll.Contains(s))
                                 _blistSssnsAll.Add(s);
                             else // ...dupe entries
