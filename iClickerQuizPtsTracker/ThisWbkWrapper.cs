@@ -115,7 +115,7 @@ namespace iClickerQuizPtsTracker
             // Instantiate email-less students class...
             try
             {
-                _noEmlsWrppr = new NoEmailLOWrapper(noEmailInfo)
+                _noEmlsWrppr = new NoEmailLOWrapper(noEmailInfo);
             }
             catch (ApplicationException ex)
             {

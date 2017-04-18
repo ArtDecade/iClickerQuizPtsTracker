@@ -178,6 +178,9 @@
     <EmbeddedResource Include="QuizUserControl.resx">
       <DependentUpon>QuizUserControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="WshNoEmail1.resx">
+      <DependentUpon>WshNoEmail1.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="App.config" />
     <None Include="iClickerQuizPtsTracker.xlsx" />
     <None Include="iClickerQuizPtsTracker_TemporaryKey.pfx" />

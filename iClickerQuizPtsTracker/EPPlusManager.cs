@@ -327,6 +327,9 @@ namespace iClickerQuizPtsTracker
         private void AddNoEmailStudentToWsh(string fNm, string lNm)
         {
             Excel.ListObject loNoEml = Globals.WshNoEmail.ListObjects["tblNoEmail"];
+            Excel.Range rngFNms = loNoEml.ListColumns["First Name"].DataBodyRange;
+            Excel.Range rngLNms = loNoEml.ListColumns["Last Name"].DataBodyRange;
+
             string existingFNm;
             string existingLNm;
             bool tblHasData = false;
@@ -334,22 +337,26 @@ namespace iClickerQuizPtsTracker
                 tblHasData = true;
             else
             {
-                Excel.ListColumn locolFNm = loNoEml.ListColumns["First Name"];
-                Excel.ListColumn locolLNm = loNoEml.ListColumns["Last Name"];
-                Excel.Range rngFNms = locolFNm.DataBodyRange;
-                Excel.Range rngLNms = locolLNm.DataBodyRange;
+                // Yes, we have to cast a cell within a range back to a range type...
+                existingFNm = ((Excel.Range)rngFNms[1, 1]).Value;
+                existingLNm = ((Excel.Range)rngLNms[1, 1]).Value;
 
-                existingFNm = rngFNms[1, 1].Value;
-                existingLNm = rngLNms[1, 1].Value;
-                existingFNm = rngFNms.Cells[1, 1].Value;
-                existingLNm = rngLNms.Cells[1, 1].Value;
-
-                //// get element value by column name and row index
-                //object val = ((Excel.Range)xtbl.Range.get_Item(RowInd, xtbl.ListColumns.get_Item(ColName).Index)).Value2;
-
-                //// get element by row and column index
-                //object val = ((Excel.Range)xtbl.Range.get_Item(RowInd, ColInd)).Value2;
+                if ((existingFNm != null) || (existingLNm != null))
+                    tblHasData = true;
             }
+            if(tblHasData)
+            {
+                //Excel.Range newRow = loNoEml.InsertRowRange();
+
+            }
+            else
+            {
+                // Just populate the 1 empty data row...
+                ((Excel.Range)rngFNms[1, 1]).Value = fNm;
+                ((Excel.Range)rngLNms[1, 1]).Value = lNm;
+            }
+
+
         }
         #endregion
     }

@@ -130,16 +130,24 @@ namespace iClickerQuizPtsTracker
 
             // Get BindingList of existing Sessions...
             BindingList<Session> blExisting = ThisWbkDataWrapper.BListSession;
-            
+
             // Create BindingList of new Sessions...
-            var newSessns = (from Session sAll
-                             in _eppMgr.BListSessionsAll
-                             orderby sAll.SessionNo
-                             select sAll).Except(from Session sExisting
-                                                 in blExisting
-                                                 select sExisting);
-            foreach (Session s in newSessns)
-                _blNewSessns.Add(s);
+            if (blExisting.Count == 0)
+            {
+                foreach (Session s in _blAllSessns)
+                    _blNewSessns.Add(s);
+            }
+            else
+            {
+                var newSessns = (from Session sAll
+                                 in _eppMgr.BListSessionsAll
+                                 orderby sAll.SessionNo
+                                 select sAll).Except(from Session sExisting
+                                                     in blExisting
+                                                     select sExisting);
+                foreach (Session s in newSessns)
+                    _blNewSessns.Add(s);
+            }
         }
 
         /// <summary>

@@ -17,7 +17,7 @@ namespace iClickerQuizPtsTracker {
     [global::System.Security.Permissions.PermissionSetAttribute(global::System.Security.Permissions.SecurityAction.Demand, Name="FullTrust")]
     public sealed partial class WshNoEmail : Microsoft.Office.Tools.Excel.WorksheetBase {
         
-        internal Microsoft.Office.Tools.Excel.ListObject tblFirstQuizDts5;
+        internal Microsoft.Office.Tools.Excel.ListObject tblNoEmail;
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Tools.Office.ProgrammingModel.dll", "15.0.0.0")]
         private global::System.Object missing = global::System.Type.Missing;
@@ -116,7 +116,7 @@ namespace iClickerQuizPtsTracker {
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
         private void BeginInitialization() {
             this.BeginInit();
-            this.tblFirstQuizDts5.BeginInit();
+            this.tblNoEmail.BeginInit();
         }
         
         /// 
@@ -124,7 +124,7 @@ namespace iClickerQuizPtsTracker {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Tools.Office.ProgrammingModel.dll", "15.0.0.0")]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
         private void EndInitialization() {
-            this.tblFirstQuizDts5.EndInit();
+            this.tblNoEmail.EndInit();
             this.EndInit();
         }
         
@@ -133,7 +133,7 @@ namespace iClickerQuizPtsTracker {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Tools.Office.ProgrammingModel.dll", "15.0.0.0")]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
         private void InitializeControls() {
-            this.tblFirstQuizDts5 = Globals.Factory.CreateListObject(null, null, "WshNoEmail:tblFirstQuizDts5", "tblFirstQuizDts5", this);
+            this.tblNoEmail = Globals.Factory.CreateListObject(null, null, "WshNoEmail:tblNoEmail", "tblNoEmail", this);
         }
         
         /// 
@@ -141,6 +141,13 @@ namespace iClickerQuizPtsTracker {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Tools.Office.ProgrammingModel.dll", "15.0.0.0")]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
         private void InitializeComponents() {
+            // 
+            // tblNoEmail
+            // 
+            this.tblNoEmail.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
+            // 
+            // WshNoEmail
+            // 
         }
         
         /// 
@@ -155,7 +162,7 @@ namespace iClickerQuizPtsTracker {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Tools.Office.ProgrammingModel.dll", "15.0.0.0")]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
         protected override void OnShutdown() {
-            this.tblFirstQuizDts5.Dispose();
+            this.tblNoEmail.Dispose();
             base.OnShutdown();
         }
     }
