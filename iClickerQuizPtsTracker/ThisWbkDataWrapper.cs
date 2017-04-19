@@ -87,6 +87,15 @@ namespace iClickerQuizPtsTracker
             { return _blSessions; }
         }
 
+        /// <summary>
+        /// Gets the Excel table of student quiz data.
+        /// </summary>
+        public static Excel.ListObject XLTblQuizData
+        {
+            get
+            { return _loQzGrades; }
+        }
+
         #endregion
 
         #region ctor

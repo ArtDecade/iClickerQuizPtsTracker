@@ -15,27 +15,32 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
     public abstract class XLListObjWrapper
     {
         #region Fields
-        #region PrivateFlds
         private Excel.Worksheet _ws = null;
         private Excel.ListObject _lo = null;
         private WshListobjPair _wshLoPr;
-        #endregion
-        #region ProtectedFlds
-        /// <summary>
-        /// Holds a value indicating whether the existence and names of the underlying
-        /// <see cref="Excel.Worksheet"/> and <see cref="Excel.ListObject"/> have been
-        /// verified.
-        /// </summary>
-        protected bool _wshAndListObjIntegrityVerified = false;
-        /// <summary>
-        /// Holds a value indicating whether the underlying <see cref="Excel.ListObject"/> 
-        /// contains data.
-        /// </summary>
-        protected bool _listObjHasData = false;
-        #endregion
+        private bool _wshAndListObjIntegrityVerified = false;
+        private bool _listObjHasData = false;
         #endregion
 
         #region ppts
+        #region protected
+        /// <summary>
+        /// Gets the underlying Excel table.
+        /// </summary>
+        protected Excel.ListObject XLTable
+        {
+            get { return _lo; }
+        }
+
+        /// <summary>
+        /// Gets the parent worksheet of the Excel table.
+        /// </summary>
+        protected Excel.Worksheet WshParent
+        {
+            get { return _ws; }
+        }
+        #endregion
+#region public
         /// <summary>
         /// Gets a value indicating whether the underlying 
         /// <see cref="Excel.ListObject"/> has yet been populated 
@@ -67,6 +72,7 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
             { return _wshAndListObjIntegrityVerified; }
         }
         #endregion
+#endregion
 
         #region ctor
         /// <summary>
@@ -97,7 +103,6 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
         #endregion
 
         #region methods
-
         /// <summary>
         /// Sets <list type="bullet">
         /// <item>parent <see cref="Excel.Worksheet"/> of <see cref="Excel.ListObject"/></item>
@@ -185,12 +190,12 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
         protected virtual bool DoesListObjHaveData()
         {
             // Now see if there are data...
-            if (_lo.ListRows.Count > 1)
+            if (this.XLTable.ListRows.Count > 1)
                 return true;
             else 
             {
                 // DataBodyRange is only 1 row...
-                foreach(Excel.Range c in _lo.DataBodyRange)
+                foreach(Excel.Range c in this.XLTable.DataBodyRange)
                 {
                     if (c.Value != null)
                         return true;
