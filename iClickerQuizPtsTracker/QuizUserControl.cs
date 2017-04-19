@@ -52,9 +52,15 @@ namespace iClickerQuizPtsTracker
         private void radioButton_CheckedChanged(object sender, EventArgs e)
         {
             if (this.radNewDatesOnly.Checked == true)
-                this.comboQuizDates.DataSource = UserControlsHandler.BindingListNewSessions; 
+            {
+                this.comboQuizDates.DataSource = UserControlsHandler.BindingListNewSessions;
+            }
             else // ...all dates
-                this.comboQuizDates.DataSource = UserControlsHandler.BindingListAllSessions; 
+            {
+                this.comboQuizDates.DataSource = UserControlsHandler.BindingListAllSessions;
+            }
+            this.comboQuizDates.DisplayMember = "ComboBoxText";
+            this.comboQuizDates.ValueMember = "SessionNo";
         }
 
         private void comboQuizDates_SelectedIndexChanged(object sender, EventArgs e)

@@ -132,6 +132,7 @@
       <DependentUpon>QuizUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Session.cs" />
+    <Compile Include="SortableBindingList.cs" />
     <Compile Include="ThisWbkDataWrapper.cs" />
     <Compile Include="ThisWbkWrapper.cs" />
     <Compile Include="ThisWorkbook.cs">

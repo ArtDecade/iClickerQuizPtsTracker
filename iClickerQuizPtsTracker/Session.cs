@@ -69,7 +69,7 @@ namespace iClickerQuizPtsTracker
             {
                 get
                 {
-                    string fmtdDate = _date.ToString("d", DateTimeFormatInfo.InvariantInfo);
+                    string fmtdDate = _date.ToString("ddd MM/dd/yyyy", DateTimeFormatInfo.InvariantInfo);
                     return String.Format($"Session {_nmbr} - {fmtdDate}");
                 }
             }

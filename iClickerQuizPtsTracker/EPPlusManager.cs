@@ -334,9 +334,9 @@ namespace iClickerQuizPtsTracker
 
             string existingFNm;
             string existingLNm;
-            bool tblHasData = false;
+            bool xtblHasData = false;
             if (loNoEml.DataBodyRange.Rows.Count > 1)
-                tblHasData = true;
+                xtblHasData = true;
             else
             {
                 // Yes, we have to cast a cell within a range back to a range type...
@@ -344,9 +344,9 @@ namespace iClickerQuizPtsTracker
                 existingLNm = ((Excel.Range)rngLNms[1, 1]).Value;
 
                 if ((existingFNm != null) || (existingLNm != null))
-                    tblHasData = true;
+                    xtblHasData = true;
             }
-            if(tblHasData)
+            if(xtblHasData)
             {
                 //Excel.Range newRow = loNoEml.InsertRowRange();
 
@@ -357,8 +357,6 @@ namespace iClickerQuizPtsTracker
                 ((Excel.Range)rngFNms[1, 1]).Value = fNm;
                 ((Excel.Range)rngLNms[1, 1]).Value = lNm;
             }
-
-
         }
         #endregion
     }

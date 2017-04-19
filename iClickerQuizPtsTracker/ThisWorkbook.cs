@@ -162,6 +162,8 @@ namespace iClickerQuizPtsTracker
 
         private void ThisWorkbook_Open()
         {
+            Globals.WshQuizPts.Select();
+
             #region VerifyStucturalIntegrityWbk
             _twbkWrapper = new ThisWbkWrapper();
 
@@ -220,6 +222,8 @@ namespace iClickerQuizPtsTracker
                 ThisWbkDataWrapper.MostRecentQuizDate);
             _ctrl.SetLabelForMostRecentSessionNos(
                 ThisWbkDataWrapper.MostRecentSessNos);
+
+
 
             // TODO:  Add prompt for user to save the workbook under a new name.
         }
