@@ -144,7 +144,7 @@ namespace iClickerQuizPtsTracker
         /// <param name="whichSession">Which Session within a given course week 
         /// (e.g., 1 for 1st, 2 for 2nd, etc.).</param>
         public Session(string sessNo, DateTime sessDate, byte maxPts, 
-            byte courseWk, byte whichSession)
+            byte courseWk, WkSession whichSession)
         {
             // This sessNo check SHOULD be unnecessary, but just in case...
             if (sessNo.Length == 1)
@@ -154,21 +154,7 @@ namespace iClickerQuizPtsTracker
             _date = sessDate;
             _maxPts = maxPts;
             _courseWk = courseWk;
-            switch(whichSession)
-            {
-                case 1:
-                    _sessEnum = WkSession.First;
-                    break;
-                case 2:
-                    _sessEnum = WkSession.Second;
-                    break;
-                case 3:
-                    _sessEnum = WkSession.Third;
-                    break;
-                default:
-                    _sessEnum = WkSession.None;
-                    break;
-            }
+            _sessEnum = whichSession;
         }
         #endregion
 
@@ -220,8 +206,8 @@ namespace iClickerQuizPtsTracker
             }
         }
         #endregion
-
         #region public
+        #region instance
         /// <summary>
         /// Returns a string that represents the current <see cref="iClickerQuizPtsTracker.Session"/> object.
         /// </summary>
@@ -352,6 +338,63 @@ namespace iClickerQuizPtsTracker
                 byte sessNmbrOther = byte.Parse(other.SessionNo);
                 return sessNmbrThis.CompareTo(sessNmbrOther);
             }
+        }
+        #endregion
+        #region static
+        /// <summary>
+        /// Converts a <see cref="iClickerQuizPtsTracker.WkSession"/> enumeration 
+        /// into a string ordinal. 
+        /// </summary>
+        /// <param name="whichSess">The <see cref="iClickerQuizPtsTracker.WkSession"/> 
+        /// enumeration to convert.</param>
+        /// <returns>&quot;1st&quot;, &quot;2nd&quot;, etc. - 
+        /// or &quot;unspecified&quot;.</returns>
+        public static string GetOrdinalNameFromWhichSessEnum(WkSession whichSess)
+        {
+            string ord;
+            switch(whichSess)
+            {
+                case WkSession.First:
+                    ord = "1st";
+                    break;
+                case WkSession.Second:
+                    ord = "2nd";
+                    break;
+                case WkSession.Third:
+                    ord = "3rd";
+                    break;
+                default:
+                    ord = "unspecified";
+                    break;
+            }
+            return ord;
+        }
+
+        /// <summary>
+        /// Converts a a string ordinal into a 
+        /// <see cref="iClickerQuizPtsTracker.WkSession"/> enumeration.
+        /// </summary>
+        /// <param name="ordSess">&quot;1st&quot;, &quot;2n.&quot;, etc. </param>
+        /// <returns>The appropriate enumeration.</returns>
+        public static WkSession GetWhichSessEnumFromOrdinal(string ordSess)
+        {
+            WkSession whSess;
+            switch(ordSess)
+            {
+                case "1st":
+                    whSess = WkSession.First;
+                    break;
+                case "2nd":
+                    whSess = WkSession.Second;
+                    break;
+                case "3rd":
+                    whSess = WkSession.Third;
+                    break;
+                default:
+                    whSess = WkSession.None;
+                    break;
+            }
+            return whSess;
         }
 
         /// <summary>
@@ -518,6 +561,7 @@ namespace iClickerQuizPtsTracker
                 return sNo1 >= sNo2;
             }
         }
+#endregion
         #endregion
         #endregion
     }

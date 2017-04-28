@@ -200,9 +200,11 @@ namespace iClickerQuizPtsTracker
                 Excel.Range cellPts = Globals.WshQuizPts.Cells[rowMsxPts, colNo];
                 byte maxPts = byte.Parse(cellPts.Value);
 
-                byte whichSess = 
-                    byte.Parse($"{Globals.WshQuizPts.Cells[rowSessEnum, colNo]}");
+                Excel.Range cellWkEnum = Globals.WshQuizPts.Cells[rowSessEnum, colNo];
+                WkSession whichSess = Session.GetWhichSessEnumFromOrdinal(cellWkEnum.Value);
+
                 byte courseWk = Globals.WshQuizPts.Cells[rowWeek, colNo];
+
                 Session s = new Session(sessNo, dt, maxPts, courseWk, whichSess);
                 _blSessions.Add(s);
             }
