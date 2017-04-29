@@ -49,6 +49,8 @@ namespace iClickerQuizPtsTracker
         private int _lastRow;
         private int _lastCol;
         private string _wbkFullNm;
+        private List<Student> _students = new List<Student>();
+        private List<string> _sessNos = new List<string>();
         private DataTable _dtAllScores;
         private QuizDataParser _hdrParser = new QuizDataParser();
         private Session[] _arrSessions;
@@ -74,6 +76,26 @@ namespace iClickerQuizPtsTracker
         {
             get
             { return _blistSssnsAll; }
+        }
+
+        /// <summary>
+        /// Gets a <see cref="System.Collections.Generic.List{iClickerQuizPtsTracker.Student}"/> 
+        /// of the Students in the raw iClicker data file.
+        /// </summary>
+        public List<Student> Students
+        {
+            get
+            { return _students; }
+        }
+
+        /// <summary>
+        /// Gets a <see cref="System.Collections.Generic.List{String}"/> of the 
+        /// Session numbers of all data in the raw iClicker data file.
+        /// </summary>
+        public List<string> SessionNos
+        {
+            get
+            { return _sessNos; }
         }
         #endregion
 
@@ -249,9 +271,12 @@ namespace iClickerQuizPtsTracker
                         try
                         {
                             Session s = new Session(rawColHdr);
-                            
+
                             if (!_blistSssnsAll.Contains(s))
+                            {
                                 _blistSssnsAll.Add(s);
+                                _sessNos.Add(s.SessionNo);
+                            }
                             else // ...dupe entries
                             {
                                 string msg =
@@ -284,7 +309,7 @@ namespace iClickerQuizPtsTracker
                      * POPULATE ROWS WITH DATA THEN ADD EACH ROW TO DATATABLE...
                      * 
                      */
-                    object stEmail;
+                    string stEmail;
                     string studentFullNm;
                     string studentLNm;
                     string studentFNm;
@@ -292,10 +317,10 @@ namespace iClickerQuizPtsTracker
                     // Loop through each data row...
                     for (int rowNo = 2; rowNo <= _lastRow; rowNo++)
                     {
-                        stEmail = ws.Cells[rowNo, ExtFileColNoStudentEmail].Value;
+                        stEmail = ws.Cells[rowNo, ExtFileColNoStudentEmail].Value.ToString();
                         studentFullNm = ws.Cells[rowNo, ExtFileColNoStudentName].Value.ToString();
-                        studentLNm = _hdrParser.ExtractLastNameFromFullName(studentFullNm);
-                        studentFNm = _hdrParser.ExtractFirstNameFromFullName(studentFullNm);
+                        studentLNm = QuizDataParser.ExtractLastNameFromFullName(studentFullNm);
+                        studentFNm = QuizDataParser.ExtractFirstNameFromFullName(studentFullNm);
 
                         // Trap for missing email rows...
                         if (stEmail == null)
@@ -309,6 +334,9 @@ namespace iClickerQuizPtsTracker
                             r[DataTblColNmEmail] = ws.Cells[rowNo, ExtFileColNoStudentEmail].Value.ToString().Trim();
                             r[DataTblColNmLNm] = studentLNm;
                             r[DataTblColNmFNm] = studentFNm;
+
+                            // Add student to list...
+                            _students.Add(new Student(stEmail, studentLNm, studentFNm));
 
                             // Loop through each quiz data column...
                             for (int colNo = ExtFileNmbrRowLblCols + 1; colNo <= _lastCol; colNo++)

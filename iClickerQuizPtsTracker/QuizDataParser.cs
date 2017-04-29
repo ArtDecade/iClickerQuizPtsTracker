@@ -52,13 +52,13 @@ namespace iClickerQuizPtsTracker
         }
 
         /// <summary>
-        /// Returns &quot;Doe&quot; given &quot;Doe, John&quot; or given
-        /// simply &quot;Doe&quot;
+        /// Returns &quot;John&quot; given either &quot;Doe, John&quot; 
+        /// or &quot;,Doe&quot;.
         /// </summary>
         /// <param name="fullNm">The student&apos;s full name, in 
-        /// either &quot;Last Name, First Name" or simply &quot;Last Name" format.</param>
-        /// <returns>The student&apos; first name.</returns>
-        public string ExtractFirstNameFromFullName(string fullNm)
+        /// either &quot;Last Name, First Name" or simply &quot;,First Name" format.</param>
+        /// <returns>The student&#39;s first name.</returns>
+        public static string ExtractFirstNameFromFullName(string fullNm)
         {
             string fn = string.Empty;
             int cPos;
@@ -71,14 +71,13 @@ namespace iClickerQuizPtsTracker
         }
 
         /// <summary>
-        /// Returns &quot;John&quot; given &quot;Doe, John&quot; or 
-        /// <see cref="string.Empty"/> given &quot;Doe&quot;
-        /// simply &quot;Doe&quot;
+        /// Returns &quot;Doe&quot; given either &quot;Doe, John&quot; or 
+        /// &quot;Doe&quot;.
         /// </summary>
         /// <param name="fullNm">The student&apos;s full name, in 
         /// either &quot;Last Name, First Name" or simply &quot;Last Name" format.</param>
-        /// <returns>The student&apos; last name.</returns>
-        public string ExtractLastNameFromFullName(string fullNm)
+        /// <returns>The student&#39;s last name.</returns>
+        public static string ExtractLastNameFromFullName(string fullNm)
         {
             string ln = fullNm.Trim();
             int cPos;

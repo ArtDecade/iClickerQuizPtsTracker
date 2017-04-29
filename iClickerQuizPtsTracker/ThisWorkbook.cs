@@ -215,7 +215,7 @@ namespace iClickerQuizPtsTracker
             #endregion
 
             _twbkWrapper.SetVirginWbkProperty();
-            if (_twbkWrapper.IsVirginWbk)
+            if (ThisWbkWrapper.IsVirginWbk)
                 _twbkWrapper.PromptUserForCourseNameAndSemester();
             
             _ctrl.SetLabelForMostRecentQuizDate(

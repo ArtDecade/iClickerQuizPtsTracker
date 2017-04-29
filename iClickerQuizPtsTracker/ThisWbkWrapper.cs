@@ -19,7 +19,7 @@ namespace iClickerQuizPtsTracker
     public class ThisWbkWrapper
     {
         #region fields
-        private bool _virginWbk;
+        private static bool _virginWbk;
         private QuizDataLOWrapper _qdLOWrppr;
         private DblDippersLOWrapper _ddsLOWrppr;
         private StudentsAddedLOWrapper _saLOWrppr;
@@ -35,7 +35,7 @@ namespace iClickerQuizPtsTracker
         /// Gets a value indicating whether this workbook is yet populated 
         /// with any student data.
         /// </summary>
-        public bool IsVirginWbk
+        public static bool IsVirginWbk
         {
             get
             { return _virginWbk; }

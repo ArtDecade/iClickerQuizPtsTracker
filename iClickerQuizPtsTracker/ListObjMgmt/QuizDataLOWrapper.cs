@@ -17,6 +17,10 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
     {
         #region fields
         private static WshListobjPair _wshTblPair;
+        private static int _noLOCols;
+        private static int _colnoEmls;
+        private static int _colnoFNms;
+        private static int _colnoLNms;
         private static bool _staticPptsSet = false;
         private static bool _hasDataCols;
         private static Excel.Range _rngSessNos;
@@ -39,6 +43,38 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
         public static bool HasDataCols
         {
             get { return _hasDataCols; }
+        }
+
+        /// <summary>
+        /// Gets the total number of columns in the <see cref="Excel.ListObject"/>.
+        /// </summary>
+        public static int NmbrCols
+        {
+            get { return _noLOCols; }
+        }
+
+        /// <summary>
+        /// Gets the number (index) of the column containing student email addresses.
+        /// </summary>
+        public static int ColNmbrEmails
+        {
+            get { return _colnoEmls; }
+        }
+
+        /// <summary>
+        /// /// Gets the number (index) of the column containing student last names.
+        /// </summary>
+        public static int ColNmbrLastNms
+        {
+            get { return _colnoLNms; }
+        }
+
+        /// <summary>
+        /// /// Gets the number (index) of the column containing student first names.
+        /// </summary>
+        public static int ColNmbrFirstNms
+        {
+            get { return _colnoFNms; }
         }
 
         /// <summary>
@@ -223,6 +259,9 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
 
             hdrCell = loWrapper.XLTable.HeaderRowRange.Cells[1, rngCol];
             hdrCell.Value = s.ColHeaderText;
+
+            // Set the number of table columns field...
+            _noLOCols = loWrapper.XLTable.Range.Columns.Count;
         }
 
         /// <summary>
@@ -251,6 +290,22 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
                     _srtblBLSessns.Add(new Session(sessNo, qzDt, mxPts, wk, sessEnum));
                 }
             }
+        }
+
+        /// <summary>
+        /// Populates the fields underlying the properties which get the number (index) 
+        /// of columns containing student emails, last names, and first names.
+        /// </summary>
+        public static void SetStudentInfoColNmbrPptys()
+        {
+            QuizDataLOWrapper loWrapper = new QuizDataLOWrapper(_wshTblPair);
+            _colnoEmls = loWrapper.XLTable.ListColumns["Student ID"].Index;
+            _colnoLNms = loWrapper.XLTable.ListColumns["Last Name"].Index;
+            _colnoFNms = loWrapper.XLTable.ListColumns["First Name"].Index;
+        }
+        public static void AddAnyNewStudents()
+        {
+
         }
         #endregion
         #region private
@@ -293,7 +348,7 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
                     _rngSessNos.Offset[loWrapper.WshParent.Range["rowTtlPts"].Row - rownoSessNos];
                 _staticPptsSet = true;
             }
-
+        }
 
         }
 #endregion

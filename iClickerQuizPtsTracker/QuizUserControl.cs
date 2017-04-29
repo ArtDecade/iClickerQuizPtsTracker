@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
 using static iClickerQuizPtsTracker.UserControlsHandler;
+using static iClickerQuizPtsTracker.MsgBoxGenerator;
 
 namespace iClickerQuizPtsTracker
 {
@@ -17,7 +17,11 @@ namespace iClickerQuizPtsTracker
     /// </summary>
     public partial class QuizUserControl : UserControl
     {
-#region ctor
+        #region fields
+        string _selectedSessNo = "0";
+
+#endregion
+        #region ctor
         /// <summary>
         /// Instantiates an instance of the workbook&apos;s action panel.
         /// </summary>
@@ -28,7 +32,7 @@ namespace iClickerQuizPtsTracker
         }
         #endregion
 
-#region eventHandlers
+        #region eventHandlers
         private void QuizUserControl_Load(object sender, EventArgs e)
         {
             
@@ -36,7 +40,7 @@ namespace iClickerQuizPtsTracker
 
         private void btnOpenQuizWbk_Click(object sender, EventArgs e)
         {
-            ImportDataMaestro();
+            MaestroOpenDataFile();
             // Automatically select new Sessions...
             if (ThisWbkDataWrapper.BListSession == null)
             {
@@ -65,7 +69,7 @@ namespace iClickerQuizPtsTracker
 
         private void comboQuizDates_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            _selectedSessNo = this.comboQuizDates.SelectedValue.ToString();
         }
 
         private void comboCourseWeek_SelectedIndexChanged(object sender, EventArgs e)
@@ -80,6 +84,23 @@ namespace iClickerQuizPtsTracker
 
         private void btnImportQuizData_Click(object sender, EventArgs e)
         {
+            // Trap for missing combo box selections...
+            if(WhichSession == WkSession.None || CourseWeek == 0 || 
+                _selectedSessNo == "0")
+            {
+                SetInsufficientDataToImportQuizzesMsg();
+                ShowMsg(MessageBoxButtons.OK);
+                return;
+            }
+
+
+
+            // TODO:  Initial Session instantiation - Session fm raw file header
+            // TODO:  Then get ppts from drop downs
+            // TODO:  Pass session to Maestro method
+
+            // Session No, Max Pts
+            //Session s = new Session("1", QuizDate, "1");
 
         }
         #endregion

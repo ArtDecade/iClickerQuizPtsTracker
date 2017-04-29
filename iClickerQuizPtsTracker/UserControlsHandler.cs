@@ -8,6 +8,9 @@ using System.Data;
 using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
 using System.ComponentModel;
+using iClickerQuizPtsTracker.ListObjMgmt;
+using static iClickerQuizPtsTracker.ThisWbkDataWrapper;
+using static iClickerQuizPtsTracker.AppConfigVals;
 
 namespace iClickerQuizPtsTracker
 {
@@ -17,7 +20,7 @@ namespace iClickerQuizPtsTracker
     public static class UserControlsHandler
     {
         #region fields
-        private static byte _crsWk;
+        private static byte _crsWk = 0;
         private static WkSession _session = WkSession.None;
         private static DataTable _dtSortedSsnsAll;
         private static EPPlusManager _eppMgr;
@@ -114,7 +117,7 @@ namespace iClickerQuizPtsTracker
         /// Fires all other methods required to import data from an Excel file of 
         /// raw iClicker student test scores.
         /// </summary>
-        public static void ImportDataMaestro()
+        public static void MaestroOpenDataFile()
         {
             string rawDataFileFullNm;
             bool userSelectedFile;
@@ -150,6 +153,39 @@ namespace iClickerQuizPtsTracker
             }
         }
 
+        public static void MaestroImportSessionData(string sessNo, byte crsWk, 
+            WkSession whichSess)
+        {
+            // Use session number to find session in raw data file...
+            Session sessToImport = null;
+            foreach(Session s in _blAllSessns)
+            {
+                if(s.SessionNo == sessNo)
+                {
+                    sessToImport = s;
+                    break;
+                }
+            }
+
+            // Set properties passed in from user control panel...
+            sessToImport.CourseWeek = crsWk;
+            sessToImport.WeeklySession = whichSess;
+
+            // Do our magic...
+            int colnoNewSess;
+            QuizDataLOWrapper.AddEmptyDataColumnWithHeaderInfo(
+                sessToImport, out colnoNewSess);
+            AddAnyNewStudentsToThisWbk();
+
+            
+            
+            
+
+
+
+
+        }
+
         /// <summary>
         /// Prompts user to select the Excel containing latest iClick data.
         /// </summary>
@@ -183,6 +219,44 @@ namespace iClickerQuizPtsTracker
             }
             return userSelectedWbk;
         }
+
+        private static void AddAnyNewStudentsToThisWbk()
+        {
+            int nmbrCols = QuizDataLOWrapper.NmbrCols;
+            int nmbrEmlsToAdd;
+            if (ThisWbkWrapper.IsVirginWbk)
+            {
+
+                var emlsAll =
+                    (from Student s in _eppMgr.Students select s).AsEnumerable();
+                nmbrEmlsToAdd = emlsAll.Count();
+                object[,] arrxlStudentsToAdd = new object[nmbrEmlsToAdd,nmbrCols];
+
+
+            }
+            else
+            {
+                PopulateStudentList();
+                // Get all emails in external data file but not in this wbk...
+                var emlsToAdd =
+                    ((from Student s in _eppMgr.Students select s)
+                        .Except(from Student s in ThisWbkDataWrapper.Students
+                                select s)).AsEnumerable();
+                nmbrEmlsToAdd = emlsToAdd.Count();
+                // Bail if there are no new students to add...
+                if (nmbrEmlsToAdd == 0)
+                { return; }
+                // If here we are adding students...
+                object[,] arrxlStudentsToAdd = new object[nmbrEmlsToAdd, nmbrCols];
+
+            }
+
+
+
+            // If here we have to add students...
+
+        }
+
         #endregion
     }
 }

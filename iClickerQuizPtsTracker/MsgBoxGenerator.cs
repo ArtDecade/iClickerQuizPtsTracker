@@ -176,5 +176,17 @@ namespace iClickerQuizPtsTracker
             _msg = string.Format("We cannot process the following column header:\n\n\t{colhdr}");
 
         }
+
+        public static void SetInsufficientDataToImportQuizzesMsg()
+        {
+            _caption = "Insufficient Data";
+
+            const string S1 = "You must make selections in each of the above drop-down boxes ";
+            const string S2 = "before we can import quiz results:";
+
+            string reqs = string.Format("\tQuiz Date to Import\n\tCourse Week\n\tLectureSession");
+
+            _msg = string.Format($"{S1}{S2}\n\n{reqs}");
+        }
     }
 }

@@ -9,7 +9,9 @@ using System.Data;
 using Excel = Microsoft.Office.Interop.Excel;
 using iClickerQuizPtsTracker.AppExceptions;
 using iClickerQuizPtsTracker.Comparers;
+using iClickerQuizPtsTracker.ListObjMgmt;
 using static iClickerQuizPtsTracker.AppConfigVals;
+using static iClickerQuizPtsTracker.ListObjMgmt.QuizDataLOWrapper;
 
 namespace iClickerQuizPtsTracker
 {
@@ -26,6 +28,7 @@ namespace iClickerQuizPtsTracker
         static Excel.Range _rngHdrzQzGradeCols;
         static DataTable _dtSessNos;
         static DataTable _dtEmls;
+        static List<Student> _student = new List<Student>();
         static string _mostRecentQuizDt = "No data yet.";
         static string _mostRecentSessNos = " -- ";
 
@@ -53,6 +56,12 @@ namespace iClickerQuizPtsTracker
         {
             get
             { return _dtEmls; }
+        }
+
+        public static List<Student> Students
+        {
+            get
+            { return _student; }
         }
 
         /// <summary>
@@ -110,6 +119,7 @@ namespace iClickerQuizPtsTracker
                 DefineQuizGradeColHeadersRange();
                 PopulateSessionsBindingList();
                 SetMostRecentSessDateNmbrsPptys();
+                SetStudentInfoColNmbrPptys();
             }
             
         }
@@ -158,7 +168,7 @@ namespace iClickerQuizPtsTracker
         /// <returns>All student email in the &quot;Student ID&quot; column.</returns>
         public static IEnumerable<string> RetrieveStudentEmails()
         {
-            Array arEmls = (Array)_loQzGrades.ListColumns["Student ID"].DataBodyRange;
+            Array arEmls = (Array)_loQzGrades.ListColumns[ColNmbrEmails].DataBodyRange;
             IEnumerable<string> _enumEmls = from string e in arEmls
                         orderby e
                         select e;
@@ -254,13 +264,41 @@ namespace iClickerQuizPtsTracker
             _dtEmls.Columns.Add(colEml);
 
             Excel.Range em = 
-                _loQzGrades.ListColumns["Student ID"].DataBodyRange;
+                _loQzGrades.ListColumns[ColNmbrEmails].DataBodyRange;
             foreach(Excel.Range c in em)
             {
                 DataRow r = _dtEmls.NewRow();
                 r["StudentEml"] = (string)c.Value;
                 _dtEmls.Rows.Add(r);
             }
+        }
+
+        /// <summary>
+        /// Populates the <see cref="System.Collections.Generic.List{Student}"/> 
+        /// field, which is exposed by the 
+        /// <see cref="iClickerQuizPtsTracker.ThisWbkDataWrapper.Students"/> 
+        /// property.
+        /// </summary>
+        public static void PopulateStudentList()
+        {
+            // Capture DataBodyRange values in an array...
+            int nmbrRecs = _loQzGrades.DataBodyRange.Rows.Count;
+            int nmbrCols = _loQzGrades.ListColumns.Count;
+            object[,] arrxlDbr = new object[nmbrRecs, nmbrCols];
+            arrxlDbr = _loQzGrades.DataBodyRange.Value;
+
+            // Populate our student list...
+            string eml;
+            string lnm;
+            string fnm;
+            for(int i = 1; i<=_loQzGrades.DataBodyRange.Rows.Count; i++)
+            {
+                eml = arrxlDbr[i, ColNmbrEmails].ToString();
+                lnm = arrxlDbr[i, ColNmbrLastNms].ToString();
+                fnm = arrxlDbr[i, ColNmbrFirstNms].ToString();
+                _student.Add(new Student(eml, lnm, fnm));
+            }
+
         }
 
         /// <summary>

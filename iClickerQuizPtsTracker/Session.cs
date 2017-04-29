@@ -226,7 +226,7 @@ namespace iClickerQuizPtsTracker
         }
 
         /// <summary>
-        /// Returns a has code for the current <see cref="iClickerQuizPtsTracker.Session"/> object.
+        /// Returns a hash code for the current <see cref="iClickerQuizPtsTracker.Session"/> object.
         /// </summary>
         /// <returns>A hash code for the current <see cref="iClickerQuizPtsTracker.Session"/>.</returns>
         public override int GetHashCode()
