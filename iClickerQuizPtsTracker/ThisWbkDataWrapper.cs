@@ -21,8 +21,6 @@ namespace iClickerQuizPtsTracker
     /// </summary>
     public static class ThisWbkDataWrapper
     {
-        // Student ID	Last Name	First Name	Semester TOTAL
-
         #region fields
         static Excel.ListObject _loQzGrades;
         static Excel.Range _rngHdrzQzGradeCols;

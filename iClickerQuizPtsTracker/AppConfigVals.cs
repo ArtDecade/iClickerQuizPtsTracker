@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Excel = Microsoft.Office.Interop.Excel;
 using System.Configuration;
 using iClickerQuizPtsTracker.AppExceptions;
 
@@ -26,17 +27,20 @@ namespace iClickerQuizPtsTracker
         /// containing student emails.
         /// </summary>
         public static readonly byte ExtFileColNoStudentEmail;
+
         /// <summary>
         /// Gets the column number within raw iClicker files 
         /// containing student names.
         /// </summary>
         public static readonly byte ExtFileColNoStudentName;
+
         /// <summary>
         /// Gets the number of columns of row labels within 
         /// raw iClicker files - i.e., the number of columns 
         /// <em>not</em> containing quiz scores.
         /// </summary>
         public static readonly byte ExtFileNmbrRowLblCols;
+
         /// <summary>
         /// Gets the number of columns of row labels within 
         /// the WshQuizPts sheet of this workboook - i.e., the 
@@ -53,6 +57,7 @@ namespace iClickerQuizPtsTracker
         /// a raw iClicker file.
         /// </summary>
         public static readonly string DataTblColNmID;
+
         /// <summary>
         /// Gets the value to be used for the
         /// <see cref="System.Data.DataColumn.ColumnName"/> 
@@ -62,6 +67,7 @@ namespace iClickerQuizPtsTracker
         /// a raw iClicker file.
         /// </summary>
         public static readonly string DataTblColNmEmail;
+
         /// <summary>
         /// Gets the value to be used for the
         /// <see cref="System.Data.DataColumn.ColumnName"/> 
@@ -71,6 +77,7 @@ namespace iClickerQuizPtsTracker
         /// a raw iClicker file.
         /// </summary>
         public static readonly string DataTblColNmLNm;
+
         /// <summary>
         /// Gets the value to be used for the
         /// <see cref="System.Data.DataColumn.ColumnName"/> 
@@ -80,6 +87,30 @@ namespace iClickerQuizPtsTracker
         /// a raw iClicker file.
         /// </summary>
         public static readonly string DataTblColNmFNm;
+
+        /// <summary>
+        /// Gets the header/name of the <see cref="Excel.ListColumn"/> of student email 
+        /// address within this workbook&#39;s Quiz Points <see cref="Excel.ListObject"/>.
+        /// </summary>
+        public static readonly string XLTblHdrEmail;
+
+        /// <summary>
+        /// Gets the header/name of the <see cref="Excel.ListColumn"/> of student last names 
+        /// within this workbook&#39;s Quiz Points <see cref="Excel.ListObject"/>.
+        /// </summary>
+        public static readonly string XLTblHdrLName;
+
+        /// <summary>
+        /// Gets the header/name of the <see cref="Excel.ListColumn"/> of student first names 
+        /// within this workbook&#39;s Quiz Points <see cref="Excel.ListObject"/>.
+        /// </summary>
+        public static readonly string XLTblHdrFName;
+
+        /// <summary>
+        /// Gets the header/name of the <see cref="Excel.ListColumn"/> of total quiz points 
+        /// within this workbook&#39;s Quiz Points <see cref="Excel.ListObject"/>.
+        /// </summary>
+        public static readonly string XLTblHdrTtlPts;
         #endregion
         #endregion
 
@@ -184,10 +215,46 @@ namespace iClickerQuizPtsTracker
             {
                 _badKeys.Add("ColLN");
             }
-#endregion
+
+            try
+            {
+                XLTblHdrEmail = (string)ar.GetValue("QuizDataXLTblHdrEml", typeof(string));
+            }
+            catch
+            {
+                _badKeys.Add("QuizDataXLTblHdrEml");
+            }
+
+            try
+            {
+                XLTblHdrLName = (string)ar.GetValue("QuizDataXLTblHdrLNm", typeof(string));
+            }
+            catch
+            {
+                _badKeys.Add("QuizDataXLTblHdrLNm");
+            }
+
+            try
+            {
+                XLTblHdrFName = (string)ar.GetValue("QuizDataXLTblHdrFNm", typeof(string));
+            }
+            catch
+            {
+                _badKeys.Add("QuizDataXLTblHdrFNm");
+            }
+
+            try
+            {
+                XLTblHdrTtlPts = (string)ar.GetValue("QuizDataXLTblHdrTtlPts", typeof(string));
+            }
+            catch
+            {
+                _badKeys.Add("QuizDataXLTblHdrTtlPts");
+            }
+            #endregion
 
             // Now check for errors...
-            if(_badKeys.Count > 0)
+            if (_badKeys.Count > 0)
             {
                 InalidAppConfigItemException ex = 
                     new InalidAppConfigItemException();

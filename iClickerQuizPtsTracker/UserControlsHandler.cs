@@ -226,11 +226,12 @@ namespace iClickerQuizPtsTracker
             int nmbrEmlsToAdd;
             if (ThisWbkWrapper.IsVirginWbk)
             {
-
                 var emlsAll =
                     (from Student s in _eppMgr.Students select s).AsEnumerable();
                 nmbrEmlsToAdd = emlsAll.Count();
                 object[,] arrxlStudentsToAdd = new object[nmbrEmlsToAdd,nmbrCols];
+                // Define range into which we will place the students (2-steps)...
+                
 
 
             }
