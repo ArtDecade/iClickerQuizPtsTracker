@@ -177,6 +177,11 @@ namespace iClickerQuizPtsTracker
 
         }
 
+        /// <summary>
+        /// Sets the caption and builds the message that will be presented to the user 
+        /// whenever she has forgotten to make selections in each of the required
+        /// combo boxes.
+        /// </summary>
         public static void SetInsufficientDataToImportQuizzesMsg()
         {
             _caption = "Insufficient Data";
@@ -187,6 +192,24 @@ namespace iClickerQuizPtsTracker
             string reqs = string.Format("\tQuiz Date to Import\n\tCourse Week\n\tLectureSession");
 
             _msg = string.Format($"{S1}{S2}\n\n{reqs}");
+        }
+
+        /// <summary>
+        /// Sets the caption and builds the message that will be presented to the user whenever 
+        /// she attempts to import quiz data out of sequence.
+        /// </summary>
+        public static void SetMissingPriorSessionWithinWkMsg()
+        {
+            _caption = "Cannot Import Session Yet";
+
+            const string S1 = "We cannot import this session yet because you have not yet imported ";
+            const string S2 = "all of the previous sessions for this course week.";
+            const string N1 = 
+                "(For example, when importing quiz grades for the 2nd recitation within a course week we cannot ";
+            const string N2 =
+                "check for Double-Dipping unless you have imported the quiz grades from the 1st recitation.)";
+
+            _msg = string.Format($"{S1}{S2}\n\n{N1}{N2}");
         }
     }
 }

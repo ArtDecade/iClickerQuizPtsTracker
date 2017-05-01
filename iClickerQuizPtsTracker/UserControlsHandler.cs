@@ -9,6 +9,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
 using System.ComponentModel;
 using iClickerQuizPtsTracker.ListObjMgmt;
+using iClickerQuizPtsTracker.Comparers;
 using static iClickerQuizPtsTracker.ThisWbkDataWrapper;
 using static iClickerQuizPtsTracker.AppConfigVals;
 
@@ -26,6 +27,7 @@ namespace iClickerQuizPtsTracker
         private static EPPlusManager _eppMgr;
         private static BindingList<Session> _blAllSessns = new BindingList<Session>();
         private static BindingList<Session> _blNewSessns = new BindingList<Session>();
+        private static bool _newStudentsAdded = false;
         #endregion
 
         #region Ppts
@@ -171,19 +173,23 @@ namespace iClickerQuizPtsTracker
             sessToImport.CourseWeek = crsWk;
             sessToImport.WeeklySession = whichSess;
 
+            // Check that user is not skipping a session...
+            if(!HasUserImportedPriorSessionsForWk(sessToImport))
+            {
+                MsgBoxGenerator.SetMissingPriorSessionWithinWkMsg();
+                MsgBoxGenerator.ShowMsg(System.Windows.Forms.MessageBoxButtons.OK);
+                return; // ... we gotta stop
+            }
+
             // Do our magic...
             int colnoNewSess;
             QuizDataLOWrapper.AddEmptyDataColumnWithHeaderInfo(
                 sessToImport, out colnoNewSess);
-            AddAnyNewStudentsToThisWbk();
+            if(!_newStudentsAdded)
+                AddAnyNewStudentsToThisWbk();
+            ImportQuizData(sessToImport, colnoNewSess);
 
-            
-            
-            
-
-
-
-
+            // Add a TA-DA message
         }
 
         /// <summary>
@@ -220,42 +226,117 @@ namespace iClickerQuizPtsTracker
             return userSelectedWbk;
         }
 
+
+        private static bool HasUserImportedPriorSessionsForWk(Session sessToImport)
+        {
+            bool havePriorSessnsForWk = false;
+            // Create a list of already-imported Sessions which come from the same 
+            // course week as the Session we want to import...
+            SessionCourseWkComparer cwComprr = new SessionCourseWkComparer();
+            List<Session> thisWkSessions = new List<Session>();
+            foreach(Session importedSess in ThisWbkDataWrapper.BListSession)
+            {
+                if (cwComprr.Compare(sessToImport, importedSess) == 0)
+                    thisWkSessions.Add(importedSess);
+            }
+
+            switch(sessToImport.WeeklySession)
+            {
+                case WkSession.First:
+                    havePriorSessnsForWk = true;
+                    break;
+                case WkSession.Second:
+                    // if thisWkSessions.Count != 1 havePriorSessnsForWk remains false...
+                    if (thisWkSessions.Count == 1)
+                    {
+                        if (ListContainsSessionWithWkSession(thisWkSessions, WkSession.First))
+                            havePriorSessnsForWk = true;
+                    }
+                    break;
+                case WkSession.Third:
+                    // if thisWkSessions.Count != 2 havePriorSessnsForWk remains false...
+                    if (thisWkSessions.Count == 2)
+                    {
+                        if (ListContainsSessionWithWkSession(thisWkSessions, WkSession.First) &&
+                            ListContainsSessionWithWkSession(thisWkSessions, WkSession.Second))
+                        { havePriorSessnsForWk = true; }
+                    }
+                    break;
+            }
+            return havePriorSessnsForWk;
+        }
+
+        private static bool ListContainsSessionWithWkSession(List<Session> listToCk, WkSession sessEnum)
+        {
+            bool hasSess = false;
+            foreach(Session s in listToCk)
+            {
+                if(s.WeeklySession == sessEnum)
+                {
+                    hasSess = true;
+                    break;
+                }
+            }
+            return hasSess;
+        }
+
         private static void AddAnyNewStudentsToThisWbk()
         {
-            int nmbrCols = QuizDataLOWrapper.NmbrCols;
-            int nmbrEmlsToAdd;
             if (ThisWbkWrapper.IsVirginWbk)
             {
-                var emlsAll =
-                    (from Student s in _eppMgr.Students select s).AsEnumerable();
-                nmbrEmlsToAdd = emlsAll.Count();
-                object[,] arrxlStudentsToAdd = new object[nmbrEmlsToAdd,nmbrCols];
-                // Define range into which we will place the students (2-steps)...
-                
-
-
+                QuizDataLOWrapper.AddAnyNewStudents(_eppMgr.Students);
             }
             else
             {
                 PopulateStudentList();
-                // Get all emails in external data file but not in this wbk...
-                var emlsToAdd =
+                // Get all students in external data file but not in this wbk...
+                var studentsToAdd =
                     ((from Student s in _eppMgr.Students select s)
                         .Except(from Student s in ThisWbkDataWrapper.Students
                                 select s)).AsEnumerable();
-                nmbrEmlsToAdd = emlsToAdd.Count();
-                // Bail if there are no new students to add...
-                if (nmbrEmlsToAdd == 0)
-                { return; }
-                // If here we are adding students...
-                object[,] arrxlStudentsToAdd = new object[nmbrEmlsToAdd, nmbrCols];
+                List<Student> newStudents = new List<Student>();
+                foreach (Student st in studentsToAdd)
+                    newStudents.Add(st);
+                if (newStudents.Count > 0)
+                    QuizDataLOWrapper.AddAnyNewStudents(newStudents);
+            }
+            PopulateStudentList(); // ...to redefine
+            // Update flag!!!!...
+            _newStudentsAdded = true;
+        }
 
+        private static void ImportQuizData(Session s, int colNoNewSession)
+        {
+            // TODO - Verify we update Students List after importing any new students...
+            int i = 0;
+            int nmbrStdnts = ThisWbkDataWrapper.Students.Count;
+            string dataColNm = ReconstructRawDataColumnHeader(s);
+            object[,] arrxlQzGrds = new object[nmbrStdnts, 1];
+            foreach(Student st in ThisWbkDataWrapper.Students)
+            {
+                // Build our array of scores to import...
+                byte? sc = (byte)((from r in _eppMgr.RawQuizScoresDataTable.AsEnumerable()
+                         where r.Field<string>(DataTblColNmEmail) == st.EmailAddr 
+                         select r).First())[dataColNm];
+                arrxlQzGrds[i, 1] = sc;
+                i++;
             }
 
+            // "Paste" the array of data into our column...
+            ThisWbkDataWrapper.XLTblQuizData.ListColumns[colNoNewSession].DataBodyRange.Value =
+                arrxlQzGrds;
 
+        }
 
-            // If here we have to add students...
+        private static string ReconstructRawDataColumnHeader(Session s)
+        {
+            // Sample:  Session 4 Total 5/2/16 [2.00]...
+            string sessNo = byte.Parse(s.SessionNo).ToString();
+            string dt = s.QuizDate.ToString("m/d/yy");
+            string maxPts = s.MaxPts.ToString("0.00");
+            maxPts = string.Format($"[{maxPts}]");
 
+            return string.Format($"Session {sessNo} Total {dt} {maxPts}");
         }
 
         #endregion

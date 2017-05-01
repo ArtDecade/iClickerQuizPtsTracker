@@ -303,9 +303,52 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
             _colnoLNms = loWrapper.XLTable.ListColumns["Last Name"].Index;
             _colnoFNms = loWrapper.XLTable.ListColumns["First Name"].Index;
         }
-        public static void AddAnyNewStudents()
-        {
 
+        /// <summary>
+        /// Adds new students (emails, last names, & first names) to bottom of quiz data 
+        /// <see cref="Excel.ListObject"/>, then resizes/redefines that <see cref="Excel.ListObject"/>.
+        /// </summary>
+        /// <param name="newStudentsList">A <see cref="System.Collections.Generic.List{Student}"/> 
+        /// of students to be added.</param>
+        /// <param name="isVirginWbk"><see langword="true"/>if we are dealing with a brand-new 
+        /// workbook, otherwise <see langword="false"/>.</param>
+        public static void AddAnyNewStudents(List<Student> newStudentsList)
+        {
+            int nmbrExistingStudents = 0; // ...default for virgin wbk
+            int nmbrNewStudents = newStudentsList.Count;
+            // Create & populate a 2D array of student info...
+            object[,] arrxlStudentsToAdd = new object[nmbrNewStudents, 3];
+            for (int i = 1; i <= nmbrNewStudents; i++)
+            {
+                arrxlStudentsToAdd[i - 1, QuizDataLOWrapper.ColNmbrEmails - 1] =
+                    newStudentsList[i - 1].EmailAddr;
+                arrxlStudentsToAdd[i - 1, QuizDataLOWrapper.ColNmbrLastNms - 1] =
+                    newStudentsList[i - 1].LastName;
+                arrxlStudentsToAdd[i - 1, QuizDataLOWrapper.ColNmbrFirstNms - 1] =
+                    newStudentsList[i - 1].FirstName;
+            }
+
+            // Define range where the new student info will be "pasted" (multi-step)...
+            QuizDataLOWrapper loWrapper = new QuizDataLOWrapper(_wshTblPair);
+            // We are assuming here that email column is still left-most column, and that 
+            // last name & firt name columns are, in either order, the next 2 columns...
+            Excel.Range rngAddStudents =
+                loWrapper.XLTable.ListColumns[_colnoEmls].DataBodyRange;
+            rngAddStudents = rngAddStudents.Resize[RowSize: nmbrNewStudents, ColumnSize: 3];
+            if (!ThisWbkWrapper.IsVirginWbk)
+            {
+                // We have to "re-locate" range to just below existing data body range...
+                nmbrExistingStudents = loWrapper.XLTable.DataBodyRange.Rows.Count;
+                rngAddStudents = rngAddStudents.Offset[RowOffset: nmbrExistingStudents];
+            }
+
+            // "Paste" the new student info into the target range...
+            rngAddStudents.Value = arrxlStudentsToAdd;
+
+            // Re-define ListObject to encompass the rows of new students...
+            Excel.Range newLO = loWrapper.XLTable.HeaderRowRange.Resize[
+                RowSize: nmbrExistingStudents + nmbrNewStudents + 1];
+            loWrapper.XLTable.Resize(newLO);
         }
         #endregion
         #region private
