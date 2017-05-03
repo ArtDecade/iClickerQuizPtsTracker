@@ -100,13 +100,13 @@ namespace iClickerQuizPtsTracker
         {
             switch (session)
             {
-                case "First":
+                case "1st":
                     _session = WkSession.First;
                     break;
-                case "Second":
+                case "2nd":
                     _session = WkSession.Second;
                     break;
-                case "Third":
+                case "3rd":
                     _session = WkSession.Third;
                     break;
                 default:

@@ -322,22 +322,26 @@ namespace iClickerQuizPtsTracker
                         objEml = ws.Cells[rowNo, ExtFileColNoStudentEmail].Value;
                         objFullNm = ws.Cells[rowNo, ExtFileColNoStudentName].Value;
 
-                        if (objEml == null && objFullNm == null)
-                            break; // ...we have no student info
+                        if (objEml == null & objFullNm == null)
+                            break; // ...We can't do anything with the grades
 
                         // Get student name...
-                        if(objFullNm != null)
+                        if (objFullNm != null)
                         {
                             studentFullNm = objFullNm.ToString();
                             studentLNm = QuizDataParser.ExtractLastNameFromFullName(studentFullNm);
                             studentFNm = QuizDataParser.ExtractFirstNameFromFullName(studentFullNm);
                         }
 
-                        if (objEml == null && objFullNm != null)
+                        if (objEml == null)
                         {
+                            // If here we have a name but not email.  However, we MUST have 
+                            // an email to process quiz grades...
                             AddNoEmailStudentToWsh(studentFNm, studentLNm);
+                            break;
                         }
 
+                        // If here we at least have an email & are good to go...
                         stEmail = objEml.ToString();
                         
                         DataRow r = _dtAllScores.NewRow();
@@ -359,7 +363,6 @@ namespace iClickerQuizPtsTracker
                                 r[colNm] = objSc;
                         }
                         _dtAllScores.Rows.Add(r); // ...add row to dataTable
-                        
                     }
                 }
             }
@@ -370,6 +373,7 @@ namespace iClickerQuizPtsTracker
             Excel.ListObject loNoEml = Globals.WshNoEmail.ListObjects["tblNoEmail"];
             Excel.Range rngFNms = loNoEml.ListColumns["First Name"].DataBodyRange;
             Excel.Range rngLNms = loNoEml.ListColumns["Last Name"].DataBodyRange;
+            int pasteRow = 1;
 
             string existingFNm;
             string existingLNm;
@@ -387,14 +391,17 @@ namespace iClickerQuizPtsTracker
             }
             if(xtblHasData)
             {
-                //Excel.Range newRow = loNoEml.InsertRowRange();
-
+                pasteRow = loNoEml.DataBodyRange.Rows.Count + 1;
             }
-            else
+
+            // "Paste" the data...
+            ((Excel.Range)rngFNms[pasteRow, 1]).Value = fNm;
+            ((Excel.Range)rngLNms[pasteRow, 1]).Value = lNm;
+            
+            // If necessary resize the lo...
+            if(xtblHasData)
             {
-                // Just populate the 1 empty data row...
-                ((Excel.Range)rngFNms[1, 1]).Value = fNm;
-                ((Excel.Range)rngLNms[1, 1]).Value = lNm;
+                loNoEml.Resize(loNoEml.Range.Resize[loNoEml.Range.Rows.Count + 1]);
             }
         }
         #endregion

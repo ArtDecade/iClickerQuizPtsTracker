@@ -39,8 +39,8 @@ namespace iClickerQuizPtsTracker
         public Student(string email, string lNm, string fNm)
         {
             EmailAddr = email.Trim();
-            LastName = lNm.Trim();
-            FirstName = fNm.Trim();
+            LastName = lNm?.Trim();
+            FirstName = fNm?.Trim();
         }
         #endregion
 
