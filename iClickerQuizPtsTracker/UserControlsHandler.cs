@@ -229,6 +229,10 @@ namespace iClickerQuizPtsTracker
 
         private static bool HasUserImportedPriorSessionsForWk(Session sessToImport)
         {
+            // Handle a virgin workbook...
+            if (ThisWbkDataWrapper.BListSession == null)
+                return true;
+
             bool havePriorSessnsForWk = false;
             // Create a list of already-imported Sessions which come from the same 
             // course week as the Session we want to import...

@@ -25,7 +25,23 @@ namespace iClickerQuizPtsTracker
         private StudentsAddedLOWrapper _saLOWrppr;
         private NoEmailLOWrapper _noEmlsWrppr;
         private NamedRangeWrapper _nrWrppr = new NamedRangeWrapper();
+
+        public static readonly WshListobjPair LOInfoQuizData;
+        public static readonly WshListobjPair LOInfoDblDpprs;
+        public static readonly WshListobjPair LOInfoStdntsAdded;
+        public static readonly WshListobjPair LOInfoMssngEmails;
         #endregion
+
+        #region ctor
+        static ThisWbkWrapper()
+        {
+            LOInfoQuizData = new WshListobjPair("tblQuizPts", Globals.WshQuizPts.Name);
+            LOInfoDblDpprs = new WshListobjPair("tblDblDippers", Globals.WshDblDpprs.Name);
+            LOInfoStdntsAdded = new WshListobjPair("tblFirstQuizDts", Globals.WshStdntsAdded.Name);
+            LOInfoMssngEmails = new WshListobjPair("tblNoEmail", Globals.WshNoEmail.Name);
+        }
+
+#endregion
 
         #region ppts
         //// QuizDataListObjMgr QuizData
@@ -61,7 +77,7 @@ namespace iClickerQuizPtsTracker
             // Instantiate quiz data class...
             try
             {
-                _qdLOWrppr = new QuizDataLOWrapper(quizDataLOInfo);
+                _qdLOWrppr = new QuizDataLOWrapper(LOInfoQuizData);
             }
             catch (ApplicationException ex)
             {
@@ -79,7 +95,7 @@ namespace iClickerQuizPtsTracker
             // Instantiate double dippers class...
             try
             {
-                _ddsLOWrppr = new DblDippersLOWrapper(dblDpprsLOInfo);
+                _ddsLOWrppr = new DblDippersLOWrapper(LOInfoDblDpprs);
             }
             catch (ApplicationException ex)
             {
@@ -97,7 +113,7 @@ namespace iClickerQuizPtsTracker
             // Instantiate student first-quiz dates class...
             try
             {
-                _saLOWrppr = new StudentsAddedLOWrapper(stdntsAddedLOInfo);
+                _saLOWrppr = new StudentsAddedLOWrapper(LOInfoStdntsAdded);
             }
             catch (ApplicationException ex)
             {
@@ -115,7 +131,7 @@ namespace iClickerQuizPtsTracker
             // Instantiate email-less students class...
             try
             {
-                _noEmlsWrppr = new NoEmailLOWrapper(noEmailInfo);
+                _noEmlsWrppr = new NoEmailLOWrapper(LOInfoMssngEmails);
             }
             catch (ApplicationException ex)
             {
