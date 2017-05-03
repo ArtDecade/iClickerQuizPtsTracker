@@ -309,46 +309,57 @@ namespace iClickerQuizPtsTracker
                      * POPULATE ROWS WITH DATA THEN ADD EACH ROW TO DATATABLE...
                      * 
                      */
+                    object objEml;
+                    object objFullNm;
                     string stEmail;
                     string studentFullNm;
-                    string studentLNm;
-                    string studentFNm;
+                    string studentLNm = null;
+                    string studentFNm = null;
 
                     // Loop through each data row...
                     for (int rowNo = 2; rowNo <= _lastRow; rowNo++)
                     {
-                        stEmail = ws.Cells[rowNo, ExtFileColNoStudentEmail].Value.ToString();
-                        studentFullNm = ws.Cells[rowNo, ExtFileColNoStudentName].Value.ToString();
-                        studentLNm = QuizDataParser.ExtractLastNameFromFullName(studentFullNm);
-                        studentFNm = QuizDataParser.ExtractFirstNameFromFullName(studentFullNm);
+                        objEml = ws.Cells[rowNo, ExtFileColNoStudentEmail].Value;
+                        objFullNm = ws.Cells[rowNo, ExtFileColNoStudentName].Value;
 
-                        // Trap for missing email rows...
-                        if (stEmail == null)
+                        if (objEml == null && objFullNm == null)
+                            break; // ...we have no student info
+
+                        // Get student name...
+                        if(objFullNm != null)
+                        {
+                            studentFullNm = objFullNm.ToString();
+                            studentLNm = QuizDataParser.ExtractLastNameFromFullName(studentFullNm);
+                            studentFNm = QuizDataParser.ExtractFirstNameFromFullName(studentFullNm);
+                        }
+
+                        if (objEml == null && objFullNm != null)
                         {
                             AddNoEmailStudentToWsh(studentFNm, studentLNm);
                         }
-                        else
+
+                        stEmail = objEml.ToString();
+                        
+                        DataRow r = _dtAllScores.NewRow();
+                        // Populate student name & email fields...
+                        r[DataTblColNmEmail] = stEmail;
+                        r[DataTblColNmLNm] = studentLNm;
+                        r[DataTblColNmFNm] = studentFNm;
+
+                        // Add student to list...
+                        _students.Add(new Student(stEmail, studentLNm, studentFNm));
+
+                        // Loop through each quiz data column...
+                        for (int colNo = ExtFileNmbrRowLblCols + 1; colNo <= _lastCol; colNo++)
                         {
-                            DataRow r = _dtAllScores.NewRow();
-                            // Populate student name & email fields...
-                            r[DataTblColNmEmail] = ws.Cells[rowNo, ExtFileColNoStudentEmail].Value.ToString().Trim();
-                            r[DataTblColNmLNm] = studentLNm;
-                            r[DataTblColNmFNm] = studentFNm;
-
-                            // Add student to list...
-                            _students.Add(new Student(stEmail, studentLNm, studentFNm));
-
-                            // Loop through each quiz data column...
-                            for (int colNo = ExtFileNmbrRowLblCols + 1; colNo <= _lastCol; colNo++)
-                            {
-                                // Populate quiz data fields...
-                                string colNm = ws.Cells[1, colNo].Value.ToString().Trim();
-                                object objSc = ws.Cells[rowNo, colNo].Value;
-                                if (objSc != null)
-                                    r[colNm] = objSc;
-                            }
-                            _dtAllScores.Rows.Add(r); // ...add row to dataTable
+                            // Populate quiz data fields...
+                            string colNm = ws.Cells[1, colNo].Value.ToString().Trim();
+                            object objSc = ws.Cells[rowNo, colNo].Value;
+                            if (objSc != null)
+                                r[colNm] = objSc;
                         }
+                        _dtAllScores.Rows.Add(r); // ...add row to dataTable
+                        
                     }
                 }
             }

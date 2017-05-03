@@ -93,6 +93,7 @@ namespace iClickerQuizPtsTracker
                 return;
             }
 
+            UserControlsHandler.MaestroImportSessionData(_selectedSessNo, CourseWeek, WhichSession);
 
 
             // TODO:  Initial Session instantiation - Session fm raw file header
