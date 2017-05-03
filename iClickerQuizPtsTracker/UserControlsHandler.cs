@@ -307,24 +307,74 @@ namespace iClickerQuizPtsTracker
 
         private static void ImportQuizData(Session s, int colNoNewSession)
         {
-            // TODO - Verify we update Students List after importing any new students...
-            int i = 0;
+            List<ProblemScore> dblDips = new List<ProblemScore>();
+            List<ProblemScore> impScores = new List<ProblemScore>();
             int nmbrStdnts = ThisWbkDataWrapper.Students.Count;
-            string dataColNm = ReconstructRawDataColumnHeader(s);
             object[,] arrxlQzGrds = new object[nmbrStdnts, 1];
-            foreach(Student st in ThisWbkDataWrapper.Students)
+            string dataColNm = ReconstructRawDataColumnHeader(s);
+            byte maxPts = s.MaxPts;
+            int i = 0;
+
+            foreach (Student st in ThisWbkDataWrapper.Students)
             {
                 // Build our array of scores to import...
-                byte? sc = (byte)((from r in _eppMgr.RawQuizScoresDataTable.AsEnumerable()
+                byte? sc = (byte?)((from r in _eppMgr.RawQuizScoresDataTable.AsEnumerable()
                          where r.Field<string>(DataTblColNmEmail) == st.EmailAddr 
                          select r).First())[dataColNm];
-                arrxlQzGrds[i, 1] = sc;
+                if (sc != null)
+                {
+                    byte qzScore = sc.GetValueOrDefault();
+                    arrxlQzGrds[i, 1] = qzScore;
+
+                    // Grab any "impossible" scores...
+                    if (qzScore > maxPts)
+                    {
+                        impScores.Add(new ProblemScore(st, s, qzScore, false));
+                    }
+
+                    // Check for double-dippers...
+                    // We have already enforced a rule that Sessions within a course week can only 
+                    // be imported sequentially.  Ergo, any other imported Sessions with the same 
+                    // course week can only be prior sessions...
+                    IEnumerable<Session> prior = from Session importedSess in ThisWbkDataWrapper.BListSession
+                                                 where (importedSess.CourseWeek == s.CourseWeek &&
+                                                 importedSess.WeeklySession != s.WeeklySession)
+                                                 select importedSess;
+                    // Convert to column headers...
+                    List<string> priorCrsWkColHdrs = new List<string>();
+                    foreach(Session prSess in prior)
+                    {
+                        priorCrsWkColHdrs.Add(ReconstructRawDataColumnHeader(prSess));
+                    }
+
+                    // NOW catch them cheatin' double dippers...
+                    foreach(string colHdr in priorCrsWkColHdrs)
+                    {
+                        byte? prSc = (byte?)((from r in _eppMgr.RawQuizScoresDataTable.AsEnumerable()
+                                              where r.Field<string>(colHdr) == st.EmailAddr
+                                              select r).First())[dataColNm];
+                        if(prSc != null)
+                        {
+                            // We have a double-dipper...
+                            dblDips.Add(new ProblemScore(st, s, prSc.GetValueOrDefault(), false));
+                            break;
+                        }
+                    }
+                }
                 i++;
             }
 
             // "Paste" the array of data into our column...
             ThisWbkDataWrapper.XLTblQuizData.ListColumns[colNoNewSession].DataBodyRange.Value =
                 arrxlQzGrds;
+
+            // Handle problematic scores...
+            if(dblDips.Count > 0)
+            {
+                WshListobjPair pr = new WshListobjPair("tblDblDippers", Globals.WshDblDpprs.Name);
+                AddProblematicScoresToAppropWsh(dblDips, pr);
+            }
+
 
         }
 
@@ -339,6 +389,49 @@ namespace iClickerQuizPtsTracker
             return string.Format($"Session {sessNo} Total {dt} {maxPts}");
         }
 
+        private static void AddProblematicScoresToAppropWsh(List<ProblemScore> scores, 
+            WshListobjPair wsLoPr)
+        {
+            bool loHasData = false;
+            Excel.ListObject lo = Globals.WshDblDpprs.ListObjects[wsLoPr.ListObjName];
+            Excel.Range topRtCell = lo.DataBodyRange.Range[lo.DataBodyRange.Cells[1, 1]];
+            if (topRtCell.Value != null)
+                loHasData = true;
+
+            // Define "paste" range...
+            Excel.Range rngNewData = lo.DataBodyRange.Resize[1,scores.Count];
+            if(loHasData)
+            {
+                rngNewData = rngNewData.Offset[lo.DataBodyRange.Rows.Count];
+            }
+
+            // Build our array of data to "paste"...
+            object[,] arrxlProbScores = new object[scores.Count, lo.DataBodyRange.Columns.Count];
+            int colnoEml = lo.ListColumns["Student ID"].Index;
+            int colnoLN = lo.ListColumns["Last Name"].Index;
+            int colnoFN = lo.ListColumns["First Name"].Index;
+            int colnoCrsWk = lo.ListColumns["Course Week"].Index;
+            int colnoDt = lo.ListColumns["Session Quiz Date"].Index;
+            int colnoMaxPts = lo.ListColumns["Ttl Possible Points"].Index;
+            int colnoScore = lo.ListColumns["Student Score"].Index;
+            int colnoIgnored = lo.ListColumns["Score Ignored"].Index;
+
+            int i = 0;
+            foreach(ProblemScore ps in scores)
+            {
+                arrxlProbScores[i, colnoEml - 1] = ps.Stdnt.EmailAddr;
+                arrxlProbScores[i, colnoLN - 1] = ps.Stdnt.LastName;
+                arrxlProbScores[i, colnoFN - 1] = ps.Stdnt.FirstName;
+                arrxlProbScores[i, colnoCrsWk - 1] = ps.Sess.CourseWeek;
+                arrxlProbScores[i, colnoDt - 1] = ps.Sess.QuizDate;
+                arrxlProbScores[i, colnoMaxPts - 1] = ps.Sess.MaxPts;
+                arrxlProbScores[i, colnoScore - 1] = ps.QuizScore;
+                arrxlProbScores[i, colnoIgnored - 1] = ps.ScoreIgnored;
+                i++;
+            }
+
+            rngNewData.Value = arrxlProbScores;
+        }
         #endregion
     }
 }
