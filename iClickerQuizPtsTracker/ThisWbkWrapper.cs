@@ -64,16 +64,6 @@ namespace iClickerQuizPtsTracker
         /// </summary>
         public virtual void InstantiateListObjWrapperClasses()
         {
-            // Define the wsh-ListObj pairs...
-            WshListobjPair quizDataLOInfo =
-                new WshListobjPair("tblQuizPts", Globals.WshQuizPts.Name);
-            WshListobjPair dblDpprsLOInfo =
-                new WshListobjPair("tblDblDippers", Globals.WshDblDpprs.Name);
-            WshListobjPair stdntsAddedLOInfo =
-                new WshListobjPair("tblFirstQuizDts", Globals.WshStdntsAdded.Name);
-            WshListobjPair noEmailInfo =
-                new WshListobjPair("tblNoEmail", Globals.WshNoEmail.Name);
-
             // Instantiate quiz data class...
             try
             {
@@ -85,7 +75,7 @@ namespace iClickerQuizPtsTracker
             }
             try
             {
-                _qdLOWrppr.SetListObjAndParentWshPpts();
+                _qdLOWrppr.SetListObjAndParentWshPpts(LOInfoQuizData);
             }
             catch (ApplicationException ex)
             {
@@ -103,7 +93,7 @@ namespace iClickerQuizPtsTracker
             }
             try
             {
-                _ddsLOWrppr.SetListObjAndParentWshPpts();
+                _ddsLOWrppr.SetListObjAndParentWshPpts(LOInfoDblDpprs);
             }
             catch (ApplicationException ex)
             {
@@ -121,7 +111,7 @@ namespace iClickerQuizPtsTracker
             }
             try
             {
-                _saLOWrppr.SetListObjAndParentWshPpts();
+                _saLOWrppr.SetListObjAndParentWshPpts(LOInfoStdntsAdded);
             }
             catch (ApplicationException ex)
             {
@@ -139,7 +129,7 @@ namespace iClickerQuizPtsTracker
             }
             try
             {
-                _noEmlsWrppr.SetListObjAndParentWshPpts();
+                _noEmlsWrppr.SetListObjAndParentWshPpts(LOInfoMssngEmails);
             }
             catch (ApplicationException ex)
             {
@@ -201,7 +191,7 @@ namespace iClickerQuizPtsTracker
         /// </remarks>
         public virtual void SetVirginWbkProperty()
         {
-            if (!_qdLOWrppr.ListObjectHasData && !_ddsLOWrppr.ListObjectHasData)
+            if (!QuizDataLOMgr.LOHasData && !_ddsLOWrppr.ListObjectHasData)
                 _virginWbk = true;
         }
 

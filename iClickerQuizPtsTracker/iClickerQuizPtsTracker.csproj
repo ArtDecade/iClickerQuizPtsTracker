@@ -118,9 +118,12 @@
     <Compile Include="FormCourseSemesterQuestionaire.Designer.cs" />
     <Compile Include="Itfs\INamedRangeWrapping.cs" />
     <Compile Include="ListObjMgmt\DblDippersLOWrapper.cs" />
+    <Compile Include="ListObjMgmt\LOMgmt.cs" />
     <Compile Include="ListObjMgmt\NoEmailLOWrapper.cs" />
+    <Compile Include="ListObjMgmt\QuizDataLOMgr.cs" />
     <Compile Include="ListObjMgmt\QuizDataLOWrapper.cs" />
     <Compile Include="ListObjMgmt\StudentsAddedLOWrapper.cs" />
+    <Compile Include="ListObjMgmt\TestLOWrapper.cs" />
     <Compile Include="ListObjMgmt\XLListObjWrapper.cs" />
     <Compile Include="MsgBoxGenerator.cs" />
     <Compile Include="NamedRangeWrapper.cs" />

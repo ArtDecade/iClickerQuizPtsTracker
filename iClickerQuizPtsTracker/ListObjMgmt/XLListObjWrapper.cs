@@ -17,17 +17,15 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
         #region Fields
         private Excel.Worksheet _ws = null;
         private Excel.ListObject _lo = null;
-        private WshListobjPair _wshLoPr;
         private bool _wshAndListObjIntegrityVerified = false;
         private bool _listObjHasData = false;
         #endregion
 
         #region ppts
-        #region protected
         /// <summary>
         /// Gets the underlying Excel table.
         /// </summary>
-        protected Excel.ListObject XLTable
+        public Excel.ListObject XLTable
         {
             get { return _lo; }
         }
@@ -35,12 +33,11 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
         /// <summary>
         /// Gets the parent worksheet of the Excel table.
         /// </summary>
-        protected Excel.Worksheet WshParent
+        public Excel.Worksheet WshParent
         {
             get { return _ws; }
         }
-        #endregion
-#region public
+
         /// <summary>
         /// Gets a value indicating whether the underlying 
         /// <see cref="Excel.ListObject"/> has yet been populated 
@@ -72,7 +69,6 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
             { return _wshAndListObjIntegrityVerified; }
         }
         #endregion
-#endregion
 
         #region ctor
         /// <summary>
@@ -91,9 +87,7 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
         {
             // Trap to ensure that constructor parameter has been populated with both
             // a wsh name and a ListObject name...
-            if (wshTblNmzPair.PptsSet)
-                _wshLoPr = wshTblNmzPair;
-            else
+            if (!wshTblNmzPair.PptsSet)
             {
                 InvalidWshListObjPairException ex = new InvalidWshListObjPairException();
                 ex.WshListObjPair = wshTblNmzPair;
@@ -116,29 +110,53 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
         /// the <see cref="Excel.ListObject"/> has either been renamed or deleted.</exception>
         /// <remarks>It would be more efficient to call this method from within the class 
         /// constructor.  However, doing some complicates unit testing.</remarks>
-        public void SetListObjAndParentWshPpts()
+        public virtual void SetListObjAndParentWshPpts(WshListobjPair wshTblNmzPair)
         {
-            if (!DoesParentWshExist())
+            if (!DoesParentWshExist(wshTblNmzPair))
             {
                 MissingWorksheetException ex = new MissingWorksheetException();
-                ex.WshListObjPair = _wshLoPr;
+                ex.WshListObjPair = wshTblNmzPair;
                 throw ex;
             }
             else
-                _ws = Globals.ThisWorkbook.Worksheets[_wshLoPr.WshNm];
+                _ws = Globals.ThisWorkbook.Worksheets[wshTblNmzPair.WshNm];
 
-            if (!DoesListObjExist())
+            if (!DoesListObjExist(wshTblNmzPair))
             {
                 MissingListObjectException ex = new MissingListObjectException();
-                ex.WshListObjPair = _wshLoPr;
+                ex.WshListObjPair = wshTblNmzPair;
                 throw ex;
             }
             else
-                _lo = _ws.ListObjects[_wshLoPr.ListObjName];
+                _lo = _ws.ListObjects[wshTblNmzPair.ListObjName];
 
             // Set fields...
             _wshAndListObjIntegrityVerified = true;
             _listObjHasData = DoesListObjHaveData();
+        }
+
+        public virtual Excel.Worksheet SetParentWsh(WshListobjPair pr)
+        {
+            if (!DoesParentWshExist(pr))
+            {
+                MissingWorksheetException ex = new MissingWorksheetException();
+                ex.WshListObjPair = pr;
+                throw ex;
+            }
+            else
+                return Globals.ThisWorkbook.Worksheets[pr.WshNm];
+        }
+
+        public virtual Excel.ListObject SetListObject(WshListobjPair wsloPair)
+        {
+            if (!DoesListObjExist(wsloPair))
+            {
+                MissingListObjectException ex = new MissingListObjectException();
+                ex.WshListObjPair = wsloPair;
+                throw ex;
+            }
+            else
+                return 
         }
 
         /// <summary>
@@ -147,11 +165,11 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
         /// </summary>
         /// <returns><c>true</c> if the <see cref="Excel.Worksheet"/> exists; 
         /// otherwise <c>false</c>.</returns>
-        public virtual bool DoesParentWshExist()
+        public virtual bool DoesParentWshExist(WshListobjPair wsLOPr)
         {
             foreach(Excel.Worksheet ws in Globals.ThisWorkbook.Worksheets)
             {
-                if(ws.Name == _wshLoPr.WshNm)
+                if(ws.Name == wsLOPr.WshNm)
                 {
                     return true;
                 }
@@ -164,7 +182,7 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
         /// </summary>
         /// <returns><c>true</c> if the <see cref="Excel.ListObject"/> exists; 
         /// otherwise <c>false</c>.</returns>
-        public virtual bool DoesListObjExist()
+        public virtual bool DoesListObjExist(WshListobjPair wsLOPr)
         {
             if (_ws.ListObjects.Count == 0)
                 return false;
@@ -172,7 +190,7 @@ namespace iClickerQuizPtsTracker.ListObjMgmt
             {
                 foreach(Excel.ListObject tbl in _ws.ListObjects)
                 {
-                    if(tbl.Name == _wshLoPr.ListObjName)
+                    if(tbl.Name == wsLOPr.ListObjName)
                     {
                         return true;
                     }

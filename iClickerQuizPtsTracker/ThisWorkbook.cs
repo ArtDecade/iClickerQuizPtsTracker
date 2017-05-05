@@ -125,9 +125,6 @@ namespace iClickerQuizPtsTracker
             new List<WshListobjPair>();
 
         private ThisWbkWrapper _twbkWrapper;
-
-        private QuizDataLOWrapper _qdLOMgr;
-        private DblDippersLOWrapper _ddsLOMgr;
         #endregion
 
         #region Ppts
@@ -140,17 +137,6 @@ namespace iClickerQuizPtsTracker
             get
             { return _qzDts; }
         }
-
-        /// <summary>
-        /// Gets a <see cref="iClickerQuizPtsTracker.ListObjMgmt.XLListObjWrapper"/>-derived class 
-        /// which handles all interaction with the <see cref="Excel.ListObject"/> containing 
-        /// all iClicker quiz grades.
-        /// </summary>
-        public QuizDataLOWrapper QuizDataListObjMgr
-        {
-            get
-            { return _qdLOMgr; }
-        }
         #endregion
 
         #region wbkEventHandlers
@@ -162,6 +148,9 @@ namespace iClickerQuizPtsTracker
 
         private void ThisWorkbook_Open()
         {
+
+
+
             Globals.WshQuizPts.Select();
 
             #region VerifyStucturalIntegrityWbk

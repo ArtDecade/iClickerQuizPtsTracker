@@ -63,11 +63,11 @@ namespace iClickerQuizPts.UnitTests
             WshListobjPair pr = new WshListobjPair(tblNm, wshNm);
             var mgr = Substitute.ForPartsOf<GenericListObjMgr>(pr);
 
-            mgr.When(x => x.DoesParentWshExist()).DoNotCallBase();
-            mgr.DoesParentWshExist().Returns(false);
+            mgr.When(x => x.DoesParentWshExist(pr)).DoNotCallBase();
+            mgr.DoesParentWshExist(pr).Returns(false);
 
             var ex = Assert.Catch<MissingWorksheetException>(() =>
-                mgr.SetListObjAndParentWshPpts());
+                mgr.SetListObjAndParentWshPpts(pr));
         }
 
         [TestCase("foo", "bar")]
@@ -78,10 +78,10 @@ namespace iClickerQuizPts.UnitTests
 
             mgr.When(x =>
             {
-                x.DoesParentWshExist().Returns(true);
-                x.DoesListObjExist().Returns(false);
+                x.DoesParentWshExist(pr).Returns(true);
+                x.DoesListObjExist(pr).Returns(false);
                 var ex = Assert.Catch<MissingListObjectException>(() =>
-                    x.SetListObjAndParentWshPpts());
+                    x.SetListObjAndParentWshPpts(pr));
             });
         }
 
@@ -93,9 +93,9 @@ namespace iClickerQuizPts.UnitTests
 
             mgr.When(x =>
             {
-                x.DoesParentWshExist().Returns(true);
-                x.DoesListObjExist().Returns(false);
-                x.SetListObjAndParentWshPpts();
+                x.DoesParentWshExist(pr).Returns(true);
+                x.DoesListObjExist(pr).Returns(false);
+                x.SetListObjAndParentWshPpts(pr);
                 Assert.True(x.UnderlyingWshAndListObjVerified);
             });
         }

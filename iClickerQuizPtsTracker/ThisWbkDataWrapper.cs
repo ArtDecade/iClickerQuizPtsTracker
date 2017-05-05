@@ -22,7 +22,6 @@ namespace iClickerQuizPtsTracker
     public static class ThisWbkDataWrapper
     {
         #region fields
-        static Excel.ListObject _loQzGrades;
         static Excel.Range _rngHdrzQzGradeCols;
         static DataTable _dtSessNos;
         static DataTable _dtEmls;
@@ -41,8 +40,7 @@ namespace iClickerQuizPtsTracker
         /// </summary>
         public static DataTable SessionNmbrs
         {
-            get
-            { return _dtSessNos; }
+            get { return _dtSessNos; }
         }
 
         /// <summary>
@@ -52,14 +50,12 @@ namespace iClickerQuizPtsTracker
         /// </summary>
         public static DataTable StudentEmails
         {
-            get
-            { return _dtEmls; }
+            get { return _dtEmls; }
         }
 
         public static List<Student> Students
         {
-            get
-            { return _student; }
+            get { return _student; }
         }
 
         /// <summary>
@@ -68,8 +64,7 @@ namespace iClickerQuizPtsTracker
         /// </summary>
         public static string MostRecentQuizDate
         {
-            get
-            { return _mostRecentQuizDt; }
+            get  { return _mostRecentQuizDt; }
         }
 
         /// <summary>
@@ -80,8 +75,7 @@ namespace iClickerQuizPtsTracker
         /// recent date gets the numbers of all such Sessions.</remarks>
         public static string MostRecentSessNos
         {
-            get
-            { return _mostRecentSessNos; }
+            get  { return _mostRecentSessNos; }
         }
 
         /// <summary>
@@ -90,19 +84,8 @@ namespace iClickerQuizPtsTracker
         /// </summary>
         public static BindingList<Session> BListSession
         {
-            get
-            { return _blSessions; }
+            get { return _blSessions; }
         }
-
-        /// <summary>
-        /// Gets the Excel table of student quiz data.
-        /// </summary>
-        public static Excel.ListObject XLTblQuizData
-        {
-            get
-            { return _loQzGrades; }
-        }
-
         #endregion
 
         #region ctor
@@ -111,13 +94,11 @@ namespace iClickerQuizPtsTracker
         /// </summary>
         static ThisWbkDataWrapper()
         {
-            _loQzGrades = Globals.WshQuizPts.ListObjects["tblQuizPts"];
             if(_loQzGrades.Range.Columns.Count > DataTblNmbrRowLblCols)
             {
                 DefineQuizGradeColHeadersRange();
                 PopulateSessionsBindingList();
                 SetMostRecentSessDateNmbrsPptys();
-                SetStudentInfoColNmbrPptys();
             }
             
         }
@@ -166,7 +147,7 @@ namespace iClickerQuizPtsTracker
         /// <returns>All student email in the &quot;Student ID&quot; column.</returns>
         public static IEnumerable<string> RetrieveStudentEmails()
         {
-            Array arEmls = (Array)_loQzGrades.ListColumns[ColNmbrEmails].DataBodyRange;
+            Array arEmls = (Array)QuizDataLOMgr.XLListObj.ListColumns[QuizDataLOMgr.ColNmbrEmails].DataBodyRange;
             IEnumerable<string> _enumEmls = from string e in arEmls
                         orderby e
                         select e;

@@ -53,7 +53,6 @@ namespace iClickerQuizPtsTracker
         private List<string> _sessNos = new List<string>();
         private DataTable _dtAllScores;
         private QuizDataParser _hdrParser = new QuizDataParser();
-        private Session[] _arrSessions;
         private BindingList<Session> _blistSssnsAll = new BindingList<Session>();
         #endregion
 
